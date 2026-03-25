@@ -58,6 +58,12 @@ This project follows a Three-Tier Architecture:
 
 ---
 
+## 🔌 APIs Used
+
+- REST API (Custom Backend API using Node.js and Express.js)
+- Gemini API
+- Cloudinary API
+
 ## 🔄 Application Flow
 1. User logs in/registers  
 2. Server validates credentials  
