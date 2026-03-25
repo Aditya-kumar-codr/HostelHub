@@ -49,14 +49,6 @@ HostelHub solves these problems by offering a modern, organized, and user-friend
 
 ---
 
-## 🔌 External APIs (Optional)
-- Gemini API – AI-based feedback analysis  
-- Cloudinary API – Image uploads  
-- Razorpay API – Online payments  
-- Firebase API – Authentication / Notifications  
-
----
-
 ## 🏗️ Architecture
 This project follows a Three-Tier Architecture:
 
@@ -134,7 +126,6 @@ JWT_SECRET=your_secret_key
 - Push notifications  
 - AI chatbot integration  
 - Smart menu recommendations  
-- Attendance tracking  
 
 ---
 
