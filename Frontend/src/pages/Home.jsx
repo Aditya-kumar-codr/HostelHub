@@ -33,7 +33,7 @@ const Home = () => {
 
                     {/* login */}
                     <div className="flex items-center justify-end gap-3 sm:gap-6 text-sm font-medium">
-                        <a href="#" className="hover:text-indigo-200 hidden sm:block">Admin</a>
+                        {/* <a href="#" className="hover:text-indigo-200 hidden sm:block">Admin</a> */}
 
                         <button className="flex items-center gap-2 bg-indigo-500 text-white px-4 py-1.5 rounded-md shadow-sm font-semibold hover:bg-indigo-400 transition-colors">
                             <LogIn size={18} />
