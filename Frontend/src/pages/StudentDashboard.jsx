@@ -6,19 +6,34 @@ import {
   Utensils,
   CreditCard,
   Menu,
-  X,
   Bell,
   User,
-  Home,
   Megaphone,
   Search
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import DashboardOverview from './DashboardOverview';
 
 const StudentDashboard = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
+  const dummyProfileData = {
+    name: 'Student Name',
+  };
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'dashboard':
+        return <DashboardOverview profileData={dummyProfileData} setActiveTab={setActiveTab} />;
+      default:
+        return (
+          <div className="flex items-center justify-center h-full">
+            <p className="text-gray-500">Content for {activeTab} coming soon...</p>
+          </div>
+        );
+    }
+  };
 
   const navigation = [
     { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard },
@@ -96,6 +111,9 @@ const StudentDashboard = () => {
           </div>
         </header>
 
+        <div className="flex-1 overflow-auto p-4 md:p-8">
+          {renderContent()}
+        </div>
       </main>
     </div>
   );
