@@ -16,6 +16,7 @@ import DashboardOverview from './DashboardOverview';
 import Announcements from './Announcements';
 import Complaints from './Complaints';
 import Laundry from './Laundry';
+import FoodReviews from './FoodReviews';
 
 const StudentDashboard = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -35,6 +36,8 @@ const StudentDashboard = () => {
         return <Complaints />;
       case 'laundry':
         return <Laundry />;
+      case 'food':
+        return <FoodReviews />;
       default:
         return null;
     }
