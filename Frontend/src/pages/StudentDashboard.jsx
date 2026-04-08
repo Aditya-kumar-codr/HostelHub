@@ -17,6 +17,7 @@ import Announcements from './Announcements';
 import Complaints from './Complaints';
 import Laundry from './Laundry';
 import FoodReviews from './FoodReviews';
+import LostAndFound from './LostAndFound';
 
 const StudentDashboard = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -36,6 +37,8 @@ const StudentDashboard = () => {
         return <Complaints />;
       case 'laundry':
         return <Laundry />;
+      case 'lost-found':
+        return <LostAndFound />;
       case 'food':
         return <FoodReviews />;
       default:
