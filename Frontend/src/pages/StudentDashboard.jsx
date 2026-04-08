@@ -18,6 +18,7 @@ import Complaints from './Complaints';
 import Laundry from './Laundry';
 import FoodReviews from './FoodReviews';
 import LostAndFound from './LostAndFound';
+import Profile from './Profile';
 
 const StudentDashboard = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -41,6 +42,8 @@ const StudentDashboard = () => {
         return <LostAndFound />;
       case 'food':
         return <FoodReviews />;
+      case 'profile':
+        return <Profile />;
       default:
         return null;
     }
@@ -91,9 +94,9 @@ const StudentDashboard = () => {
             })}
           </nav>
           <div className="p-4 border-t border-gray-100">
-            <div className={`flex items-center px-3 py-3 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors cursor-pointer ${!isSidebarOpen && 'justify-center'}`}>
-              <User className="w-5 h-5 text-gray-400" />
-              {isSidebarOpen && <span className="ml-3 font-medium text-sm">My Profile</span>}
+            <div onClick={() => setActiveTab('profile')} className={`flex items-center px-3 py-3 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors cursor-pointer ${!isSidebarOpen && 'justify-center'}`}>
+              <User className={`w-5 h-5 ${activeTab === 'profile' ? 'text-indigo-600' : 'text-gray-400'}`} />
+              {isSidebarOpen && <span className={`ml-3 font-medium text-sm ${activeTab === 'profile' ? 'text-indigo-600' : ''}`}>My Profile</span>}
             </div>
           </div>
         </div>
@@ -115,7 +118,7 @@ const StudentDashboard = () => {
               <Bell className="h-6 w-6" />
               <span className="text-[10px] font-medium mt-0.5">Notification</span>
             </button>
-            <div className="flex flex-col items-center cursor-pointer text-gray-400 hover:text-gray-600 transition-colors">
+            <div onClick={() => setActiveTab('profile')} className={`flex flex-col items-center cursor-pointer transition-colors ${activeTab === 'profile' ? 'text-indigo-600' : 'text-gray-400 hover:text-gray-600'}`}>
               <User className="h-6 w-6" />
               <span className="text-[10px] font-medium mt-0.5">Profile</span>
             </div>

@@ -14,7 +14,7 @@ const LostAndFound = () => {
   });
 
   const [lostItems, setLostItems] = useState([
-    { id: 1, name: 'Blue Water Bottle', description: 'Milton 1L bottle, metallic blue color.', location: 'Library Area', date: 'Oct 24, 2023' },
+    { id: 1, name: 'Blue Water Bottle', description: 'Milton 1L bottle, metallic blue color.', location: 'Study Area', date: 'Oct 24, 2023' },
     { id: 2, name: 'Scientific Calculator', description: 'Casio fx-991EX, has a small scratch on the back.', location: 'Room 302', date: 'Oct 25, 2023' }
   ]);
 
