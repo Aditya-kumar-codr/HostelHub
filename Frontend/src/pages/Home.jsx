@@ -1,5 +1,6 @@
 import React from 'react';
 import { LogIn, UserPlus, Utensils, Waves, ClipboardList, Wrench } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
     const navLinks = [
@@ -35,15 +36,15 @@ const Home = () => {
                     <div className="flex items-center justify-end gap-3 sm:gap-6 text-sm font-medium">
                         {/* <a href="#" className="hover:text-indigo-200 hidden sm:block">Admin</a> */}
 
-                        <button className="flex items-center gap-2 bg-indigo-500 text-white px-4 py-1.5 rounded-md shadow-sm font-semibold hover:bg-indigo-400 transition-colors">
+                        <Link to="/login" className="flex items-center gap-2 bg-indigo-500 text-white px-4 py-1.5 rounded-md shadow-sm font-semibold hover:bg-indigo-400 transition-colors">
                             <LogIn size={18} />
                             <span className="hidden sm:inline">Log In</span>
                             <span className="sm:hidden">Login</span>
-                        </button>
-                        <button className="flex items-center gap-2 bg-white text-indigo-600 px-4 py-1.5 rounded-md shadow-sm font-semibold hover:bg-gray-100 transition-colors">
+                        </Link>
+                        <Link to="/signup" className="flex items-center gap-2 bg-white text-indigo-600 px-4 py-1.5 rounded-md shadow-sm font-semibold hover:bg-gray-100 transition-colors">
                             <UserPlus size={18} />
                             <span className="hidden sm:inline">Sign Up</span>
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </nav>
@@ -58,9 +59,9 @@ const Home = () => {
                         Welcome to PST Hostel ! Please log in to your account.
                         You can check the food menu, book machines for laundry, and log complaints easily here.
                     </p>
-                    <button className="bg-indigo-600 text-white px-8 py-2.5 rounded-md shadow-sm font-bold hover:bg-indigo-700 transition-colors">
+                    <Link to="/login" className="inline-block bg-indigo-600 text-white px-8 py-2.5 rounded-md shadow-sm font-bold hover:bg-indigo-700 transition-colors">
                         Log In Here
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Facilities Section */}
@@ -81,7 +82,7 @@ const Home = () => {
                             <div className="p-5 flex-1 flex flex-col">
                                 <h4 className="text-lg font-bold text-gray-800 mb-2">Hostel Rooms</h4>
                                 <p className="text-sm text-gray-600 mb-4 flex-1">See your room details or ask to change your room. Check if guest rooms are open for parents.</p>
-                                <button className="text-blue-600 text-sm font-bold hover:underline self-start">Log In to See Rooms</button>
+                                <Link to="/login" className="text-blue-600 text-sm font-bold hover:underline self-start">Log In to See Rooms</Link>
                             </div>
                         </div>
 
@@ -94,7 +95,7 @@ const Home = () => {
                             <div className="p-5 flex-1 flex flex-col">
                                 <h4 className="text-lg font-bold text-gray-800 mb-2">Sports Area</h4>
                                 <p className="text-sm text-gray-600 mb-4 flex-1">Time to play badminton or table tennis. Check if sports gear is free to use.</p>
-                                <button className="text-green-600 text-sm font-bold hover:underline self-start">Log In to Book Game</button>
+                                <Link to="/login" className="text-green-600 text-sm font-bold hover:underline self-start">Log In to Book Game</Link>
                             </div>
                         </div>
 
@@ -107,7 +108,7 @@ const Home = () => {
                             <div className="p-5 flex-1 flex flex-col">
                                 <h4 className="text-lg font-bold text-gray-800 mb-2">Canteen</h4>
                                 <p className="text-sm text-gray-600 mb-4 flex-1">snacks and cold drinks from the hostel canteen before you get there.</p>
-                                <button className="text-orange-600 text-sm font-bold hover:underline self-start">Log In to See Foods</button>
+                                <Link to="/login" className="text-orange-600 text-sm font-bold hover:underline self-start">Log In to See Foods</Link>
                             </div>
                         </div>
 
@@ -120,7 +121,7 @@ const Home = () => {
                             <div className="p-5 flex-1 flex flex-col">
                                 <h4 className="text-lg font-bold text-gray-800 mb-2">Study Room</h4>
                                 <p className="text-sm text-gray-600 mb-4 flex-1">Quiet seat in the study room to read in peace. See what books are there.</p>
-                                <button className="text-purple-600 text-sm font-bold hover:underline self-start">Log In to Find a Seat</button>
+                                <Link to="/login" className="text-purple-600 text-sm font-bold hover:underline self-start">Log In to Find a Seat</Link>
                             </div>
                         </div>
 
