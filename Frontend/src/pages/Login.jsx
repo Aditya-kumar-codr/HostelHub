@@ -14,7 +14,20 @@ const Login = () => {
   const handleGoogleLogin = async () => {
     setError('');
     try {
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      
+      // Save user to PostgreSQL backend
+      await fetch('http://localhost:5000/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          firebaseUid: user.uid, 
+          email: user.email, 
+          displayName: user.displayName 
+        })
+      });
+
       navigate('/dashboard');
     } catch (err) {
       if (err.code !== 'auth/popup-closed-by-user') {
@@ -28,8 +41,20 @@ const Login = () => {
     setError('');
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      // For now, route to dashboard
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const user = result.user;
+      
+      // Save user to PostgreSQL backend
+      await fetch('http://localhost:5000/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          firebaseUid: user.uid, 
+          email: user.email, 
+          displayName: user.displayName 
+        })
+      });
+
       navigate('/dashboard');
     } catch (err) {
       setError(err.message);

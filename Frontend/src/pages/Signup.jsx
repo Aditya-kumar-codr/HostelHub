@@ -14,7 +14,20 @@ const Signup = () => {
   const handleGoogleLogin = async () => {
     setError('');
     try {
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      
+      // Save user to PostgreSQL backend
+      await fetch('http://localhost:5000/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          firebaseUid: user.uid, 
+          email: user.email, 
+          displayName: user.displayName 
+        })
+      });
+
       navigate('/dashboard');
     } catch (err) {
       if (err.code !== 'auth/popup-closed-by-user') {
@@ -31,8 +44,20 @@ const Signup = () => {
     setError('');
     setLoading(true);
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      // For now, route to dashboard upon successful signup
+      const result = await createUserWithEmailAndPassword(auth, email, password);
+      const user = result.user;
+      
+      // Save user to PostgreSQL backend
+      await fetch('http://localhost:5000/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          firebaseUid: user.uid, 
+          email: user.email, 
+          displayName: user.displayName 
+        })
+      });
+
       navigate('/dashboard');
     } catch (err) {
       setError(err.message);
