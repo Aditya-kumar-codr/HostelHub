@@ -46,6 +46,9 @@ const Home = () => {
 
                     {/* login */}
                     <div className="flex items-center gap-4">
+                        <Link to="/admin-login" className="hidden sm:block text-gray-400 text-sm font-semibold hover:text-indigo-600 transition-colors pr-3 border-r border-gray-200">
+                            Admin Login
+                        </Link>
                         <Link to="/login" className="hidden sm:flex items-center gap-2 text-gray-600 font-semibold hover:text-indigo-600 transition-colors px-2">
                             <span className="hidden sm:inline">Log In</span>
                         </Link>
@@ -168,7 +171,7 @@ const Home = () => {
                                 <h4 className="text-2xl font-bold text-gray-900 mb-3">Study Area</h4>
                                 <p className="text-gray-600 leading-relaxed mb-8 flex-1">Find absolute peace. Reserve an isolated quiet seat ahead of time during exams, and check the shared resource database.</p>
                                 <Link to="/login" className="inline-flex items-center gap-2 text-purple-600 font-bold hover:text-purple-800 transition-colors w-max text-lg p-2 -ml-2 rounded-lg hover:bg-purple-50">
-                                    Reserve a Seat <ChevronRight size={20} />
+                                    Study Here <ChevronRight size={20} />
                                 </Link>
                             </div>
                         </div>

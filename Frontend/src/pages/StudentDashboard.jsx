@@ -9,7 +9,8 @@ import {
   Bell,
   User,
   Megaphone,
-  Search
+  Search,
+  ShieldCheck
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import DashboardOverview from './DashboardOverview';
@@ -19,13 +20,14 @@ import Laundry from './Laundry';
 import FoodReviews from './FoodReviews';
 import LostAndFound from './LostAndFound';
 import Profile from './Profile';
+import Expenses from './Expenses';
 
 const StudentDashboard = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const dummyProfileData = {
-    name: 'Student Name',
+    name: 'Aditya',
   };
 
   const renderContent = () => {
@@ -44,6 +46,8 @@ const StudentDashboard = () => {
         return <FoodReviews />;
       case 'profile':
         return <Profile />;
+      case 'expenses':
+        return <Expenses />;
       default:
         return null;
     }
@@ -104,14 +108,23 @@ const StudentDashboard = () => {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0">
-        {/* Mobile Header */}
-        <header className="bg-white h-16 border-b border-gray-200 flex items-center justify-between px-4 md:px-8">
+        {/* Top Navbar */}
+        <header className="bg-white h-16 border-b border-gray-200 flex items-center justify-between px-4 md:px-8 relative">
           <div className="flex items-center md:hidden">
             <button className="p-2 -ml-2 mr-2 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 rounded-md">
               <Menu className="h-6 w-6" aria-hidden="true" />
             </button>
-            <Link to="/" className="font-bold text-lg text-indigo-600">HostelHub</Link>
           </div>
+          
+          <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
+              <div className="bg-indigo-600 p-1.5 rounded-lg text-white shadow-sm">
+                  <ShieldCheck size={18} />
+              </div>
+              <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 tracking-tight">
+                  HostelHub
+              </span>
+          </div>
+
           <div className="flex-1" />
           <div className="flex items-center space-x-6 mr-2">
             <button className="flex flex-col items-center text-gray-400 hover:text-gray-600 transition-colors">
