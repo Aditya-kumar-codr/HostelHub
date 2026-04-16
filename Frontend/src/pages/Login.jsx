@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
 import { LogIn } from 'lucide-react';
+import { API_URL } from '../config';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -17,8 +18,8 @@ const Login = () => {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       
-      // Save user to PostgreSQL backend
-      await fetch('http://localhost:5000/api/users', {
+      // Save user to PostgreSQL backend (non-blocking)
+      fetch(`${API_URL}/api/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -26,7 +27,7 @@ const Login = () => {
           email: user.email, 
           displayName: user.displayName 
         })
-      });
+      }).catch(err => console.warn('Backend sync failed:', err));
 
       navigate('/dashboard');
     } catch (err) {
@@ -44,8 +45,8 @@ const Login = () => {
       const result = await signInWithEmailAndPassword(auth, email, password);
       const user = result.user;
       
-      // Save user to PostgreSQL backend
-      await fetch('http://localhost:5000/api/users', {
+      // Save user to PostgreSQL backend (non-blocking)
+      fetch(`${API_URL}/api/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -53,7 +54,7 @@ const Login = () => {
           email: user.email, 
           displayName: user.displayName 
         })
-      });
+      }).catch(err => console.warn('Backend sync failed:', err));
 
       navigate('/dashboard');
     } catch (err) {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Camera, Edit2, Save, MapPin, Shield, Phone, User, Key, Utensils, BookOpen } from 'lucide-react';
 import { auth } from '../firebase';
+import { API_URL } from '../config';
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -35,7 +36,7 @@ const Profile = () => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         try {
-          const res = await fetch(`http://localhost:5000/api/profile/${user.uid}`);
+          const res = await fetch(`${API_URL}/api/profile/${user.uid}`);
           if (res.ok) {
             const data = await res.json();
 
@@ -94,7 +95,7 @@ const Profile = () => {
         dietPreference: hostelData.dietPreference,
       };
 
-      const res = await fetch('http://localhost:5000/api/profile', {
+      const res = await fetch(`${API_URL}/api/profile`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

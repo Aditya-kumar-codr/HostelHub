@@ -10,24 +10,242 @@ import {
   Menu,
   Bell,
   User,
-  ShieldCheck
+  ShieldCheck,
+  Phone,
+  Mail,
+  CheckCircle,
+  XCircle,
+  ArrowLeft,
+  ChevronRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-// Stub components for Admin
-const AdminDashboardOverview = () => (
-  <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
-    <h2 className="text-xl font-bold text-gray-800 mb-4">Admin Overview</h2>
-    <p className="text-gray-600">Welcome to the Admin Dashboard. Select a tab from the sidebar to manage hostel operations.</p>
-  </div>
-);
 
-const AdminStudentsData = () => (
-  <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
-    <h2 className="text-xl font-bold text-gray-800 mb-4">Students Data</h2>
-    <p className="text-gray-600">View and manage all registered students in the hostel.</p>
-  </div>
-);
+
+const AdminStudentsData = () => {
+  const [selectedStudent, setSelectedStudent] = useState(null);
+
+  const students = [
+    {
+      id: 1,
+      name: 'Aditya',
+      room: 'B-101',
+      feesPending: true,
+      phone: '+91 98765 43210',
+      email: 'aditya@example.com',
+      fatherName: 'Rajesh Kumar',
+      fatherPhone: '+91 91234 56789',
+      address: '123 Main St, Mumbai, MH'
+    },
+    {
+      id: 2,
+      name: 'Abhishek',
+      room: 'B-102',
+      feesPending: false,
+      phone: '+91 87654 32109',
+      email: 'abhishek@example.com',
+      fatherName: 'Sanjay Gupta',
+      fatherPhone: '+91 81234 56780',
+      address: '45 Park Ave, Delhi, DL'
+    },
+    {
+      id: 3,
+      name: 'Arhan',
+      room: 'B-103',
+      feesPending: false,
+      phone: '+91 76543 21098',
+      email: 'arhan@example.com',
+      fatherName: 'Ahmed Khan',
+      fatherPhone: '+91 71234 56781',
+      address: '78 Hill Rd, Pune, MH'
+    },
+    {
+      id: 4,
+      name: 'Preetham',
+      room: 'A-201',
+      feesPending: true,
+      phone: '+91 65432 10987',
+      email: 'preetham@example.com',
+      fatherName: 'Venkat Reddy',
+      fatherPhone: '+91 61234 56782',
+      address: '90 Layout, Bangalore, KA'
+    },
+    {
+      id: 5,
+      name: 'Shivraj',
+      room: 'A-202',
+      feesPending: false,
+      phone: '+91 54321 09876',
+      email: 'shivraj@example.com',
+      fatherName: 'Deshmukh Rao',
+      fatherPhone: '+91 51234 56783',
+      address: '12 Fort Road, Jaipur, RJ'
+    }
+  ];
+
+  if (selectedStudent) {
+    return (
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden min-h-[500px]">
+        <div className="p-6 border-b border-gray-100 flex items-center gap-4 bg-gray-50/50">
+          <button 
+            onClick={() => setSelectedStudent(null)}
+            className="p-2 bg-white border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
+          >
+            <ArrowLeft size={18} />
+          </button>
+          <div>
+            <h2 className="text-xl font-bold text-gray-800">Student Profile</h2>
+            <p className="text-sm text-gray-500">Detailed information</p>
+          </div>
+        </div>
+        <div className="p-6 md:p-8">
+          <div className="flex flex-col md:flex-row gap-8">
+            <div className="flex-shrink-0">
+              <div className="w-24 h-24 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center text-4xl font-black shadow-sm">
+                {selectedStudent.name.charAt(0)}
+              </div>
+            </div>
+            
+            <div className="flex-1 grid grid-cols-1 gap-y-6">
+              <div>
+                <h3 className="text-3xl font-black text-gray-900">{selectedStudent.name}</h3>
+                <div className="mt-3 flex flex-wrap items-center gap-3">
+                  <span className="px-3 py-1.5 bg-gray-100 text-gray-700 text-sm font-bold rounded-lg border border-gray-200">
+                    Room {selectedStudent.room}
+                  </span>
+                  {selectedStudent.feesPending ? (
+                     <span className="px-3 py-1.5 bg-red-50 text-red-700 text-sm font-bold rounded-lg flex items-center gap-1.5 border border-red-100">
+                       <XCircle size={16} /> Fees Pending
+                     </span>
+                  ) : (
+                    <span className="px-3 py-1.5 bg-green-50 text-green-700 text-sm font-bold rounded-lg flex items-center gap-1.5 border border-green-100">
+                      <CheckCircle size={16} /> Fees Cleared
+                    </span>
+                  )}
+                </div>
+              </div>
+
+               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-4">
+                 {/* Contact Info */}
+                 <div className="space-y-4 pt-6 border-t border-gray-100">
+                    <h4 className="text-sm font-black text-gray-400 uppercase tracking-wider flex items-center gap-2 mb-4">
+                      <User size={16} /> Personal Contact
+                    </h4>
+                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                      <div className="bg-white p-2.5 text-gray-500 rounded-lg shadow-sm border border-gray-100"><Phone size={18} /></div>
+                      <div>
+                        <p className="text-[11px] text-gray-500 font-bold uppercase tracking-wide">Student Mobile</p>
+                        <p className="text-sm font-bold text-gray-900">{selectedStudent.phone}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                      <div className="bg-white p-2.5 text-gray-500 rounded-lg shadow-sm border border-gray-100"><Mail size={18} /></div>
+                      <div>
+                        <p className="text-[11px] text-gray-500 font-bold uppercase tracking-wide">Email Address</p>
+                        <p className="text-sm font-bold text-gray-900">{selectedStudent.email}</p>
+                      </div>
+                    </div>
+                 </div>
+
+                 {/* Parent Info */}
+                 <div className="space-y-4 pt-6 border-t border-gray-100">
+                    <h4 className="text-sm font-black text-gray-400 uppercase tracking-wider flex items-center gap-2 mb-4">
+                      <Users size={16} /> Guardian Details
+                    </h4>
+                    <div className="p-4 border border-gray-200 rounded-xl shadow-sm bg-white relative overflow-hidden">
+                       <div className="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
+                       <p className="text-[11px] text-gray-400 font-bold uppercase tracking-wider mb-1">Father's Name</p>
+                       <p className="text-gray-900 font-black text-lg mb-4">{selectedStudent.fatherName}</p>
+                       
+                       <p className="text-[11px] text-gray-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1"><Phone size={12}/> Contact Number</p>
+                       <p className="text-gray-900 font-bold mb-4">{selectedStudent.fatherPhone}</p>
+
+                       <p className="text-[11px] text-gray-400 font-bold uppercase tracking-wider mb-1">Permanent Address</p>
+                       <p className="text-gray-700 font-medium text-sm leading-relaxed">{selectedStudent.address}</p>
+                    </div>
+                 </div>
+               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="p-6 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-bold text-gray-800">Students Directory</h2>
+          <p className="text-sm text-gray-500 mt-1">Manage all {students.length} registered students</p>
+        </div>
+        <div className="relative">
+          <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+          <input 
+            type="text" 
+            placeholder="Search students..." 
+            className="pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all w-full sm:w-64"
+          />
+        </div>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-gray-50/80 text-gray-500 text-xs uppercase tracking-wider border-b border-gray-100">
+              <th className="px-6 py-4 font-bold">Student Name</th>
+              <th className="px-6 py-4 font-bold">Room</th>
+              <th className="px-6 py-4 font-bold">Contact</th>
+              <th className="px-6 py-4 font-bold">Fee Status</th>
+              <th className="px-6 py-4 font-bold text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {students.map((student) => (
+              <tr key={student.id} className="hover:bg-gray-50/80 transition-colors group">
+                <td className="px-6 py-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center font-black text-lg border border-indigo-100/50">
+                      {student.name.charAt(0)}
+                    </div>
+                    <span className="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">{student.name}</span>
+                  </div>
+                </td>
+                <td className="px-6 py-4">
+                  <span className="text-gray-600 font-bold bg-white px-2.5 py-1 rounded-md border border-gray-200 shadow-sm">{student.room}</span>
+                </td>
+                <td className="px-6 py-4">
+                   <div className="text-sm">
+                     <p className="text-gray-900 font-bold">{student.phone}</p>
+                     <p className="text-gray-500 text-xs font-medium mt-0.5">{student.email}</p>
+                   </div>
+                </td>
+                <td className="px-6 py-4">
+                  {student.feesPending ? (
+                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-red-50 text-red-700 border border-red-100 shadow-sm">
+                        <span className="w-1.5 h-1.5 rounded-full bg-red-600"></span> Pending
+                     </span>
+                  ) : (
+                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-green-50 text-green-700 border border-green-100 shadow-sm">
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-600"></span> Cleared
+                     </span>
+                  )}
+                </td>
+                <td className="px-6 py-4 text-right">
+                  <button 
+                    onClick={() => setSelectedStudent(student)}
+                    className="inline-flex items-center gap-1 bg-white border border-gray-200 text-gray-700 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 px-3 py-1.5 rounded-lg font-bold text-sm transition-all shadow-sm group-hover:shadow-md"
+                  >
+                    View <ChevronRight size={16} />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
 
 const AdminFoodAndMeals = () => (
   <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
@@ -67,113 +285,113 @@ const AdminLostAndFound = () => (
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'dashboard': return <AdminDashboardOverview />;
-      case 'students': return <AdminStudentsData />;
+      case 'dashboard': return <AdminStudentsData />;
       case 'food': return <AdminFoodAndMeals />;
       case 'announcements': return <AdminAnnouncements />;
       case 'complaints': return <AdminComplaints />;
       case 'expenses': return <AdminExpenses />;
       case 'lost-found': return <AdminLostAndFound />;
-      default: return <AdminDashboardOverview />;
+      default: return <AdminStudentsData />;
     }
   };
 
   const navigation = [
-    { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard },
-    { id: 'students', name: 'Students Data', icon: Users },
+    { id: 'dashboard', name: 'Students Directory', icon: Users },
     { id: 'food', name: 'Food & Meals', icon: Utensils },
     { id: 'announcements', name: 'Announcements', icon: Megaphone },
-    { id: 'complaints', name: 'Complaints Resolve', icon: AlertCircle },
-    { id: 'expenses', name: 'Student Expenses', icon: CreditCard },
+    { id: 'complaints', name: 'Complaints', icon: AlertCircle },
+    { id: 'expenses', name: 'Expenses', icon: CreditCard },
     { id: 'lost-found', name: 'Lost & Found', icon: Search },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar Navigation */}
-      <aside
-        className={`${isSidebarOpen ? 'w-64' : 'w-20'} bg-gray-900 text-white transition-all duration-300 ease-in-out fixed md:relative z-20 h-full hidden md:block shadow-xl`}
-      >
-        <div className="h-full flex flex-col">
-          <div className="h-16 flex items-center justify-between px-4 border-b border-gray-800">
-            <Link to="/" className={`font-bold text-xl text-indigo-400 ${!isSidebarOpen && 'hidden'}`}>Admin Panel</Link>
-            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 rounded-lg hover:bg-gray-800 text-gray-400">
-              <Menu className="w-5 h-5" />
-            </button>
-          </div>
-          <nav className="flex-1 px-3 py-6 space-y-2 overflow-y-auto">
-            {navigation.map((item) => {
-              const Icon = item.icon;
-              const isActive = activeTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center px-3 py-3 rounded-xl transition-colors ${isActive
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+      {/* Top Navbar */}
+      <header className="bg-white h-16 border-b border-gray-200 flex items-center justify-between px-4 md:px-6 shadow-sm z-20 sticky top-0">
+        <div className="flex items-center gap-8">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2 cursor-pointer hover:opacity-90 transition-opacity">
+                <div className="bg-indigo-600 p-1.5 rounded-lg text-white shadow-sm">
+                    <ShieldCheck size={20} />
+                </div>
+                <span className="text-lg font-bold text-gray-900 tracking-tight whitespace-nowrap">
+                    HostelHub Admin
+                </span>
+            </Link>
+            
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center gap-1.5 ml-4">
+              {navigation.map((item) => {
+                const Icon = item.icon;
+                const isActive = activeTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id)}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                      isActive 
+                        ? 'bg-indigo-50 text-indigo-700 shadow-sm border border-indigo-100/50' 
+                        : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 border border-transparent'
                     }`}
-                  title={!isSidebarOpen ? item.name : ""}
-                >
-                  <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-gray-400'}`} />
-                  {isSidebarOpen && <span className="ml-3 font-medium text-sm">{item.name}</span>}
-                </button>
-              );
-            })}
-          </nav>
-          <div className="p-4 border-t border-gray-800">
-            <div className={`flex items-center px-3 py-3 rounded-xl text-gray-400 hover:bg-gray-800 transition-colors cursor-pointer ${!isSidebarOpen && 'justify-center'}`}>
-              <User className="w-5 h-5" />
-              {isSidebarOpen && <span className="ml-3 font-medium text-sm">Admin Profile</span>}
+                  >
+                    <Icon size={16} className={isActive ? 'text-indigo-600' : 'text-gray-400'} />
+                    {item.name}
+                  </button>
+                )
+              })}
+            </nav>
+        </div>
+
+        {/* Right side Profile & Actions */}
+        <div className="flex items-center space-x-4">
+          <button className="relative p-2 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100 hidden sm:block">
+            <Bell className="h-5 w-5" />
+            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+          </button>
+          
+          <div className="flex items-center gap-3 pl-0 sm:pl-4 sm:border-l border-gray-200 cursor-pointer group">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold shadow-sm group-hover:scale-105 transition-transform">
+              A
+            </div>
+            <div className="hidden md:block text-sm">
+              <p className="font-bold text-gray-900 leading-tight">Admin User</p>
+              <p className="text-[11px] font-medium text-gray-500">Manager</p>
             </div>
           </div>
         </div>
-      </aside>
+      </header>
 
-      {/* Main Content Area */}
-      <main className="flex-1 flex flex-col min-w-0">
-        {/* Top Navbar */}
-        <header className="bg-white h-16 border-b border-gray-200 flex items-center justify-between px-4 md:px-8 relative shadow-sm z-10">
-          <div className="flex items-center md:hidden">
-            <button className="p-2 -ml-2 mr-2 text-gray-500 hover:bg-gray-100 rounded-md">
-              <Menu className="h-6 w-6" aria-hidden="true" />
-            </button>
-          </div>
-          
-          <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
-              <div className="bg-indigo-600 p-1.5 rounded-lg text-white shadow-sm">
-                  <ShieldCheck size={18} />
-              </div>
-              <span className="text-lg font-bold text-gray-900 tracking-tight">
-                  HostelHub Admin
-              </span>
-          </div>
+      {/* Mobile/Tablet Navigation (Scrollable horizontal bar) */}
+      <div className="lg:hidden bg-white border-b border-gray-100 overflow-x-auto no-scrollbar shadow-sm sticky top-16 z-10">
+        <nav className="flex items-center p-2 gap-2 w-max px-4">
+           {navigation.map((item) => {
+                const Icon = item.icon;
+                const isActive = activeTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id)}
+                    className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${
+                      isActive 
+                        ? 'bg-indigo-50 text-indigo-700 border border-indigo-100' 
+                        : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 border border-transparent'
+                    }`}
+                  >
+                    <Icon size={16} className={isActive ? 'text-indigo-600' : 'text-gray-400'} />
+                    {item.name}
+                  </button>
+                )
+              })}
+        </nav>
+      </div>
 
-          <div className="flex-1" />
-          <div className="flex items-center space-x-4 md:space-x-6 mr-2">
-            <button className="relative p-2 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100">
-              <Bell className="h-5 w-5" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-            </button>
-            <div className="flex items-center gap-3 cursor-pointer pl-4 border-l border-gray-200">
-              <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
-                A
-              </div>
-              <div className="hidden md:block text-sm">
-                <p className="font-medium text-gray-900">Admin User</p>
-                <p className="text-xs text-gray-500">Manager</p>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Dashboard Content */}
-        <div className="flex-1 overflow-auto p-4 md:p-8 bg-gray-50">
-          {renderContent()}
+      {/* Dashboard Main Content Area */}
+      <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
+        <div className="max-w-7xl mx-auto">
+           {renderContent()}
         </div>
       </main>
     </div>

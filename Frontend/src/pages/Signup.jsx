@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
+import { API_URL } from '../config';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
@@ -17,8 +18,8 @@ const Signup = () => {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       
-      // Save user to PostgreSQL backend
-      await fetch('http://localhost:5000/api/users', {
+      // Save user to PostgreSQL backend (non-blocking)
+      fetch(`${API_URL}/api/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -26,7 +27,7 @@ const Signup = () => {
           email: user.email, 
           displayName: user.displayName 
         })
-      });
+      }).catch(err => console.warn('Backend sync failed:', err));
 
       navigate('/dashboard');
     } catch (err) {
@@ -47,8 +48,8 @@ const Signup = () => {
       const result = await createUserWithEmailAndPassword(auth, email, password);
       const user = result.user;
       
-      // Save user to PostgreSQL backend
-      await fetch('http://localhost:5000/api/users', {
+      // Save user to PostgreSQL backend (non-blocking)
+      fetch(`${API_URL}/api/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -56,7 +57,7 @@ const Signup = () => {
           email: user.email, 
           displayName: user.displayName 
         })
-      });
+      }).catch(err => console.warn('Backend sync failed:', err));
 
       navigate('/dashboard');
     } catch (err) {
