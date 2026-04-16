@@ -80,6 +80,7 @@ const Profile = () => {
     try {
       const payload = {
         firebaseUid: auth.currentUser.uid,
+        email: auth.currentUser.email,
         name: profileData.name,
         phone: profileData.phone,
         course: profileData.course,
