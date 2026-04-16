@@ -22,7 +22,7 @@ const Home = () => {
                         <div className="bg-indigo-600 p-2 rounded-xl text-white group-hover:bg-indigo-700 transition-colors shadow-sm">
                             <ShieldCheck size={24} />
                         </div>
-                        <span className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 tracking-tight">
+                        <span className="text-2xl font-black text-indigo-600 tracking-tight">
                             HostelHub
                         </span>
                     </div>
@@ -46,7 +46,7 @@ const Home = () => {
 
                     {/* login */}
                     <div className="flex items-center gap-4">
-                        <Link to="/admin-login" className="hidden sm:block text-gray-400 text-sm font-semibold hover:text-indigo-600 transition-colors pr-3 border-r border-gray-200">
+                        <Link to="/admin-dashboard" className="hidden sm:block text-gray-400 text-sm font-semibold hover:text-indigo-600 transition-colors pr-3 border-r border-gray-200">
                             Admin Login
                         </Link>
                         <Link to="/login" className="hidden sm:flex items-center gap-2 text-gray-600 font-semibold hover:text-indigo-600 transition-colors px-2">
@@ -69,11 +69,11 @@ const Home = () => {
 
                     <div className="relative z-10 px-8 py-16 md:py-28 md:px-16 flex flex-col md:flex-row items-center">
                         <div className="md:w-[70%] text-center md:text-left">
-                            <div className="inline-flex items-center gap-2 bg-indigo-500/30 text-indigo-100 border border-indigo-400/30 px-4 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase mb-6 backdrop-blur-sm">
+                            <div className="inline-flex items-center gap-2 bg-indigo-600 text-white border border-indigo-400 px-4 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase mb-6 shadow-sm">
                                 <Zap size={14} className="text-yellow-400" /> The New Standard of Living
                             </div>
                             <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[1.1] mb-6">
-                                Everything you need to thrive at <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-200">PST Hostel</span>.
+                                Everything you need to thrive at <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-200">PST Hostel</span>
                             </h1>
                             <p className="text-indigo-100 max-w-2xl mx-auto md:mx-0 mb-10 text-lg md:text-xl font-medium leading-relaxed">
                                 Experience a seamless hostel life. Check live food menus, instantly book laundry, and log maintenance complaints directly from your phone.
@@ -82,7 +82,7 @@ const Home = () => {
                                 <Link to="/signup" className="flex items-center justify-center gap-2 bg-indigo-500 text-white px-8 py-4 rounded-xl shadow-xl shadow-indigo-500/30 font-bold text-lg hover:bg-indigo-400 hover:scale-105 transition-all">
                                     Get Started <ArrowRight size={20} />
                                 </Link>
-                                <Link to="/login" className="flex items-center justify-center gap-2 bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition-all">
+                                <Link to="/login" className="flex items-center justify-center gap-2 bg-white text-indigo-600 border border-gray-200 px-8 py-4 rounded-xl shadow-xl font-bold text-lg hover:bg-gray-50 hover:scale-105 transition-all">
                                     Login to Account
                                 </Link>
                             </div>
