@@ -1,5 +1,5 @@
 import { getProfileByUserId, upsertProfile } from '../models/profileModel.js';
-import { findUserByFirebaseUid } from '../models/userModel.js';
+import { findUserByFirebaseUid, updateUserName } from '../models/userModel.js';
 
 export const getProfile = async (req, res) => {
   try {
@@ -19,9 +19,12 @@ export const getProfile = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    const { firebaseUid } = req.body;
+    const { firebaseUid, name } = req.body;
     if (!firebaseUid) return res.status(400).json({ error: 'firebaseUid is required' });
 
+    if (name) {
+      await updateUserName(firebaseUid, name);
+    }
     const updatedProfile = await upsertProfile(firebaseUid, req.body);
     res.status(200).json(updatedProfile);
   } catch (error) {

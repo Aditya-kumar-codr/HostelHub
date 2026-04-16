@@ -12,3 +12,11 @@ export const createUser = async (firebaseUid, email, displayName) => {
   );
   return result.rows[0];
 };
+
+export const updateUserName = async (firebaseUid, displayName) => {
+  const result = await pool.query(
+    'UPDATE "User" SET "displayName" = $1 WHERE "firebaseUid" = $2 RETURNING *',
+    [displayName, firebaseUid]
+  );
+  return result.rows[0];
+};
