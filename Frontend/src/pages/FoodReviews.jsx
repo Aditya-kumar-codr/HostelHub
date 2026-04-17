@@ -92,9 +92,13 @@ const FoodReviews = () => {
     if (!auth.currentUser) return alert('Please log in to submit a review.');
     if (rating === 0) return alert('Please select a rating');
     
+    const currentMealData = todaysMenu.find(m => m.type.toLowerCase() === mealType.toLowerCase());
+    const foodItemsText = currentMealData ? currentMealData.items : '';
+
     const payload = {
       studentName: currentUserName,
       meal: mealType,
+      foodItems: foodItemsText,
       rating: rating,
       comment: comment || 'No comment provided'
     };
@@ -260,6 +264,11 @@ const FoodReviews = () => {
                     <Star className="w-3.5 h-3.5 text-yellow-500 fill-current" />
                   </div>
                 </div>
+                {rev.foodItems && (
+                  <p className="text-[11px] font-medium text-gray-500 mb-2 truncate bg-gray-100/50 px-2 py-1 rounded-md border border-gray-100">
+                    <span className="text-gray-400 mr-1">Served:</span>{rev.foodItems.replace(/[\n•\-]/g, ' ').replace(/\s+/g, ' ').trim()}
+                  </p>
+                )}
                 <p className="text-sm text-gray-600 leading-relaxed pl-12 line-clamp-3">
                   "{rev.comment}"
                 </p>

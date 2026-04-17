@@ -79,6 +79,11 @@ export const initDB = async () => {
       );
     `);
 
+    // Ensure foodItems column is added in case table already exists
+    await client.query(`
+      ALTER TABLE "Review" ADD COLUMN IF NOT EXISTS "foodItems" TEXT DEFAULT '';
+    `);
+
     client.release();
     console.log('Database tables initialized securely!');
   } catch (error) {

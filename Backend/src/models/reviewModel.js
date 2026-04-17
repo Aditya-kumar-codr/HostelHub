@@ -7,10 +7,10 @@ export const getRecentReviews = async () => {
   return result.rows;
 };
 
-export const createReview = async (studentName, meal, rating, comment) => {
+export const createReview = async (studentName, meal, foodItems, rating, comment) => {
   const result = await pool.query(
-    'INSERT INTO "Review" ("studentName", "meal", "rating", "comment") VALUES ($1, $2, $3, $4) RETURNING *',
-    [studentName, meal, rating, comment]
+    'INSERT INTO "Review" ("studentName", "meal", "foodItems", "rating", "comment") VALUES ($1, $2, $3, $4, $5) RETURNING *',
+    [studentName, meal, foodItems, rating, comment]
   );
   return result.rows[0];
 };

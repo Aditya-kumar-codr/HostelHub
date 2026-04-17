@@ -12,13 +12,13 @@ export const getReviews = async (req, res) => {
 
 export const saveReview = async (req, res) => {
   try {
-    const { studentName, meal, rating, comment } = req.body;
+    const { studentName, meal, foodItems, rating, comment } = req.body;
 
     if (!studentName || !meal || !rating || !comment) {
       return res.status(400).json({ error: 'studentName, meal, rating, and comment are required' });
     }
 
-    const review = await createReview(studentName, meal, rating, comment);
+    const review = await createReview(studentName, meal, foodItems || '', rating, comment);
     res.status(200).json(review);
   } catch (error) {
     console.error("Error saving review:", error.message);
