@@ -67,6 +67,18 @@ export const initDB = async () => {
       );
     `);
 
+    // Create Review Table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS "Review" (
+        "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+        "studentName" VARCHAR(255) NOT NULL,
+        "meal" VARCHAR(50) NOT NULL,
+        "rating" INTEGER NOT NULL CHECK ("rating" >= 1 AND "rating" <= 5),
+        "comment" TEXT NOT NULL,
+        "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
     client.release();
     console.log('Database tables initialized securely!');
   } catch (error) {
