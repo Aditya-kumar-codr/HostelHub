@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Star, MessageSquare, Utensils, Send, User } from 'lucide-react';
 import { API_URL } from '../config';
+import { auth } from '../firebase';
 
 const FoodReviews = () => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
-  const [mealType, setMealType] = useState('Lunch');
+  const [mealType, setMealType] = useState('Breakfast');
   const [comment, setComment] = useState('');
+  const [currentUserName, setCurrentUserName] = useState('Student');
   
   const [todaysMenu, setTodaysMenu] = useState([
     { type: 'Breakfast', time: '7:30 AM - 9:30 AM', items: 'Loading menu...' },
@@ -14,26 +16,38 @@ const FoodReviews = () => {
     { type: 'Dinner', time: '7:30 PM - 9:30 PM', items: 'Loading menu...' },
   ]);
 
-  const [reviews, setReviews] = useState([
-    { id: 1, student: 'Rahul Kumar', meal: 'Dinner', rating: 5, comment: 'Paneer was exceptionally good tonight!', date: 'Today, 8:30 PM' },
-    { id: 2, student: 'Amit Singh', meal: 'Lunch', rating: 4, comment: 'Rajma chawal is always a classic. Good food.', date: 'Today, 1:15 PM' },
-    { id: 3, student: 'Priya Sharma', meal: 'Breakfast', rating: 3, comment: 'Idlis were a bit cold, but sambhar was tasty.', date: 'Today, 9:00 AM' },
-  ]);
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
+    // 1. Fetch Auth User Name
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        try {
+          const res = await fetch(`${API_URL}/api/profile/${user.uid}`);
+          if (res.ok) {
+            const data = await res.json();
+            setCurrentUserName(data.user?.displayName || user.displayName || 'Student');
+          } else {
+            setCurrentUserName(user.displayName || 'Student');
+          }
+        } catch (err) {
+          setCurrentUserName(user.displayName || 'Student');
+        }
+      }
+    });
+
+    // 2. Fetch Live Menu
     const fetchLiveMenu = async () => {
       const today = new Date().toISOString().split('T')[0];
       try {
         const res = await fetch(`${API_URL}/api/meals/${today}`);
         if (res.ok) {
           const data = await res.json();
-          // Create a map of backend mealTypes to items
           const dbMeals = {};
           data.forEach(m => {
             dbMeals[m.mealType.toLowerCase()] = m.items;
           });
 
-          // Update the localized today's menu array
           setTodaysMenu([
             { type: 'Breakfast', time: '7:30 AM - 9:30 AM', items: dbMeals['breakfast'] || 'Menu not updated yet by admin.' },
             { type: 'Lunch', time: '12:30 PM - 2:30 PM', items: dbMeals['lunch'] || 'Menu not updated yet by admin.' },
@@ -44,25 +58,67 @@ const FoodReviews = () => {
         console.error("Failed to load today's menu", err);
       }
     };
+
+    // 3. Fetch Live Reviews
+    const fetchLiveReviews = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/reviews`);
+        if (res.ok) {
+          const data = await res.json();
+          setReviews(data);
+        }
+      } catch (err) {
+        console.error("Failed to load reviews", err);
+      }
+    };
+
     fetchLiveMenu();
+    fetchLiveReviews();
+    
+    return () => unsubscribe();
   }, []);
 
-  const handleSubmitReview = (e) => {
+  const formatReviewDate = (timestamp) => {
+    const d = new Date(timestamp);
+    const time = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    if (d.toDateString() === new Date().toDateString()) {
+      return `Today, ${time}`;
+    }
+    return `${d.toLocaleDateString()} ${time}`;
+  };
+
+  const handleSubmitReview = async (e) => {
     e.preventDefault();
+    if (!auth.currentUser) return alert('Please log in to submit a review.');
     if (rating === 0) return alert('Please select a rating');
     
-    const newReview = {
-      id: reviews.length + 1,
-      student: 'Current User',
+    const payload = {
+      studentName: currentUserName,
       meal: mealType,
       rating: rating,
-      comment: comment || 'No comment provided',
-      date: 'Just now'
+      comment: comment || 'No comment provided'
     };
     
-    setReviews([newReview, ...reviews]);
-    setRating(0);
-    setComment('');
+    try {
+      const res = await fetch(`${API_URL}/api/reviews`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      if (res.ok) {
+        const newReview = await res.json();
+        // Add nicely formatted date parsing immediately for UI
+        setReviews([newReview, ...reviews]);
+        setRating(0);
+        setComment('');
+      } else {
+        alert('Failed to submit review.');
+      }
+    } catch(err) {
+      console.error(err);
+      alert('Error submitting review.');
+    }
   };
 
   return (
@@ -165,7 +221,7 @@ const FoodReviews = () => {
                   className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl text-sm font-medium flex items-center transition-all hover:shadow-lg active:scale-95"
                 >
                   <Send className="w-4 h-4 mr-2" />
-                  Submit Feedback
+                  Submit Feedback as {currentUserName}
                 </button>
               </div>
             </form>
@@ -188,15 +244,15 @@ const FoodReviews = () => {
           
           <div className="space-y-4 overflow-y-auto pr-2 flex-1">
             {reviews.map((rev) => (
-              <div key={rev.id} className="p-4 rounded-xl bg-gray-50/80 border border-gray-100 hover:bg-gray-50 transition-colors">
+              <div key={rev.id || Math.random()} className="p-4 rounded-xl bg-gray-50/80 border border-gray-100 hover:bg-gray-50 transition-colors">
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex items-center">
                     <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white mr-3 shadow-sm">
                       <User className="w-4 h-4" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-gray-800">{rev.student}</p>
-                      <p className="text-[11px] font-medium text-gray-500 mt-0.5">{rev.date} • <span className="text-indigo-600">{rev.meal}</span></p>
+                      <p className="text-sm font-semibold text-gray-800">{rev.studentName || rev.student}</p>
+                      <p className="text-[11px] font-medium text-gray-500 mt-0.5">{rev.createdAt ? formatReviewDate(rev.createdAt) : rev.date} • <span className="text-indigo-600">{rev.meal}</span></p>
                     </div>
                   </div>
                   <div className="flex items-center bg-white border border-yellow-200 shadow-sm px-2 py-1 rounded-lg">
