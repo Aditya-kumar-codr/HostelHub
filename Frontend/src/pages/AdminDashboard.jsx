@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   LayoutDashboard,
   Users,
@@ -19,70 +19,44 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { API_URL } from '../config';
 
 // Import our new separate page component
 import AdminFoodAndMeals from './AdminFoodAndMeals';
 
 const AdminStudentsData = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const students = [
-    {
-      id: 1,
-      name: 'Aditya',
-      room: 'B-101',
-      feesPending: true,
-      phone: '+91 98765 43210',
-      email: 'aditya@example.com',
-      fatherName: 'Rajesh Kumar',
-      fatherPhone: '+91 91234 56789',
-      address: '123 Main St, Mumbai, MH'
-    },
-    {
-      id: 2,
-      name: 'Abhishek',
-      room: 'B-102',
-      feesPending: false,
-      phone: '+91 87654 32109',
-      email: 'abhishek@example.com',
-      fatherName: 'Sanjay Gupta',
-      fatherPhone: '+91 81234 56780',
-      address: '45 Park Ave, Delhi, DL'
-    },
-    {
-      id: 3,
-      name: 'Arhan',
-      room: 'B-103',
-      feesPending: false,
-      phone: '+91 76543 21098',
-      email: 'arhan@example.com',
-      fatherName: 'Ahmed Khan',
-      fatherPhone: '+91 71234 56781',
-      address: '78 Hill Rd, Pune, MH'
-    },
-    {
-      id: 4,
-      name: 'Preetham',
-      room: 'A-201',
-      feesPending: true,
-      phone: '+91 65432 10987',
-      email: 'preetham@example.com',
-      fatherName: 'Venkat Reddy',
-      fatherPhone: '+91 61234 56782',
-      address: '90 Layout, Bangalore, KA'
-    },
-    {
-      id: 5,
-      name: 'Shivraj',
-      room: 'A-202',
-      feesPending: false,
-      phone: '+91 54321 09876',
-      email: 'shivraj@example.com',
-      fatherName: 'Deshmukh Rao',
-      fatherPhone: '+91 51234 56783',
-      address: '12 Fort Road, Jaipur, RJ'
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  const fetchStudents = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/profile/all`);
+      if (res.ok) {
+        const data = await res.json();
+        const formattedStudents = data.map((s, index) => ({
+          id: s.firebaseUid || index,
+          name: s.displayName || s.name || 'Unnamed Student',
+          room: s.room || 'Unassigned',
+          feesPending: false, // Default since fee tracking isn't implemented in db yet
+          phone: s.phone || 'N/A',
+          email: s.email || 'N/A',
+          fatherName: s.contactName || 'N/A',
+          fatherPhone: s.contactNumber || 'N/A',
+          address: 'Hostel Campus'
+        }));
+        setStudents(formattedStudents);
+      }
+    } catch (err) {
+      console.error('Failed to fetch students:', err);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
   if (selectedStudent) {
     return (

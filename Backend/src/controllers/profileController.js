@@ -1,4 +1,4 @@
-import { getProfileByUserId, upsertProfile } from '../models/profileModel.js';
+import { getProfileByUserId, upsertProfile, getAllProfilesWithUsers } from '../models/profileModel.js';
 import { findUserByFirebaseUid, createUser, updateUserName } from '../models/userModel.js';
 
 export const getProfile = async (req, res) => {
@@ -13,6 +13,16 @@ export const getProfile = async (req, res) => {
     res.status(200).json({ ...profile, user });
   } catch (error) {
     console.error("Error getting profile:", error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const getAllProfiles = async (req, res) => {
+  try {
+    const profiles = await getAllProfilesWithUsers();
+    res.status(200).json(profiles);
+  } catch (error) {
+    console.error("Error getting all profiles:", error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };

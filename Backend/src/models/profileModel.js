@@ -6,6 +6,18 @@ export const getProfileByUserId = async (userId) => {
   return result.rows[0];
 };
 
+export const getAllProfilesWithUsers = async () => {
+  const result = await pool.query(`
+    SELECT 
+      u."id" AS "userIdPk", u."firebaseUid", u."email", u."displayName",
+      p.*
+    FROM "User" u
+    LEFT JOIN "Profile" p ON u."firebaseUid" = p."userId"
+    ORDER BY u."createdAt" DESC
+  `);
+  return result.rows;
+};
+
 export const upsertProfile = async (userId, profileData) => {
   const {
     phone, course, enrollment, bloodGroup, dob,
