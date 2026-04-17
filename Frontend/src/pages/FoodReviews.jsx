@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Star, MessageSquare, Utensils, Send, User } from 'lucide-react';
+import { API_URL } from '../config';
 
 const FoodReviews = () => {
   const [rating, setRating] = useState(0);
@@ -7,18 +8,44 @@ const FoodReviews = () => {
   const [mealType, setMealType] = useState('Lunch');
   const [comment, setComment] = useState('');
   
+  const [todaysMenu, setTodaysMenu] = useState([
+    { type: 'Breakfast', time: '7:30 AM - 9:30 AM', items: 'Loading menu...' },
+    { type: 'Lunch', time: '12:30 PM - 2:30 PM', items: 'Loading menu...' },
+    { type: 'Dinner', time: '7:30 PM - 9:30 PM', items: 'Loading menu...' },
+  ]);
+
   const [reviews, setReviews] = useState([
     { id: 1, student: 'Rahul Kumar', meal: 'Dinner', rating: 5, comment: 'Paneer was exceptionally good tonight!', date: 'Today, 8:30 PM' },
     { id: 2, student: 'Amit Singh', meal: 'Lunch', rating: 4, comment: 'Rajma chawal is always a classic. Good food.', date: 'Today, 1:15 PM' },
     { id: 3, student: 'Priya Sharma', meal: 'Breakfast', rating: 3, comment: 'Idlis were a bit cold, but sambhar was tasty.', date: 'Today, 9:00 AM' },
   ]);
 
-  const todaysMenu = [
-    { type: 'Breakfast', time: '8:00 AM - 10:00 AM', items: 'Aloo Paratha, Curd, Pickle, Tea/Coffee' },
-    { type: 'Lunch', time: '12:30 PM - 2:30 PM', items: 'Rajma, Jeera Rice, Roti, Salad, Raita' },
-    { type: 'Snacks', time: '5:00 PM - 6:00 PM', items: 'Samosa, Green Chutney, Tea' },
-    { type: 'Dinner', time: '8:00 PM - 10:00 PM', items: 'Kadai Paneer, Dal Tadka, Roti, Rice, Gulab Jamun' },
-  ];
+  useEffect(() => {
+    const fetchLiveMenu = async () => {
+      const today = new Date().toISOString().split('T')[0];
+      try {
+        const res = await fetch(`${API_URL}/api/meals/${today}`);
+        if (res.ok) {
+          const data = await res.json();
+          // Create a map of backend mealTypes to items
+          const dbMeals = {};
+          data.forEach(m => {
+            dbMeals[m.mealType.toLowerCase()] = m.items;
+          });
+
+          // Update the localized today's menu array
+          setTodaysMenu([
+            { type: 'Breakfast', time: '7:30 AM - 9:30 AM', items: dbMeals['breakfast'] || 'Menu not updated yet by admin.' },
+            { type: 'Lunch', time: '12:30 PM - 2:30 PM', items: dbMeals['lunch'] || 'Menu not updated yet by admin.' },
+            { type: 'Dinner', time: '7:30 PM - 9:30 PM', items: dbMeals['dinner'] || 'Menu not updated yet by admin.' },
+          ]);
+        }
+      } catch (err) {
+        console.error("Failed to load today's menu", err);
+      }
+    };
+    fetchLiveMenu();
+  }, []);
 
   const handleSubmitReview = (e) => {
     e.preventDefault();
@@ -56,7 +83,7 @@ const FoodReviews = () => {
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
             <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
               <Utensils className="w-5 h-5 mr-2 text-indigo-500" />
-              Today's Menu
+              Today's Live Menu
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {todaysMenu.map((meal, index) => (
@@ -65,7 +92,7 @@ const FoodReviews = () => {
                     <span className="font-semibold text-orange-900">{meal.type}</span>
                     <span className="text-xs font-medium text-orange-700 bg-orange-200 px-2.5 py-1 rounded-full">{meal.time}</span>
                   </div>
-                  <p className="text-gray-700 text-sm mt-1 leading-relaxed">{meal.items}</p>
+                  <p className="text-gray-700 text-sm mt-1 leading-relaxed whitespace-pre-wrap">{meal.items}</p>
                 </div>
               ))}
             </div>
