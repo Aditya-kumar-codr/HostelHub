@@ -6,6 +6,7 @@ import userRoutes from './src/routes/userRoutes.js';
 import profileRoutes from './src/routes/profileRoutes.js';
 import mealRoutes from './src/routes/mealRoutes.js';
 import reviewRoutes from './src/routes/reviewRoutes.js';
+import announcementRoutes from './src/routes/announcementRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -25,6 +26,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/meals', mealRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/announcements', announcementRoutes);
 
 // Basic route to test the server
 app.get('/', (req, res) => {

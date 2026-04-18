@@ -84,6 +84,18 @@ export const initDB = async () => {
       ALTER TABLE "Review" ADD COLUMN IF NOT EXISTS "foodItems" TEXT DEFAULT '';
     `);
 
+    // Create Announcement Table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS "Announcement" (
+        "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+        "title" VARCHAR(500) NOT NULL,
+        "content" TEXT NOT NULL,
+        "importance" VARCHAR(20) NOT NULL DEFAULT 'normal' CHECK ("importance" IN ('low', 'normal', 'important', 'urgent')),
+        "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
     client.release();
     console.log('Database tables initialized securely!');
   } catch (error) {
