@@ -16,7 +16,11 @@ import {
   CheckCircle,
   XCircle,
   ArrowLeft,
-  ChevronRight
+  ChevronRight,
+  Save,
+  MapPin,
+  Home,
+  Edit2
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { API_URL } from '../config';
@@ -28,6 +32,9 @@ const AdminStudentsData = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editingHostel, setEditingHostel] = useState(false);
+  const [hostelForm, setHostelForm] = useState({ hostelName: '', room: '', roomType: '', joinDate: '', dietPreference: '' });
+  const [savingHostel, setSavingHostel] = useState(false);
 
   useEffect(() => {
     fetchStudents();
@@ -42,12 +49,16 @@ const AdminStudentsData = () => {
           id: s.firebaseUid || index,
           name: s.displayName || s.name || 'Unnamed Student',
           room: s.room || 'Unassigned',
-          feesPending: false, // Default since fee tracking isn't implemented in db yet
+          feesPending: false,
           phone: s.phone || 'N/A',
           email: s.email || 'N/A',
           fatherName: s.contactName || 'N/A',
           fatherPhone: s.contactNumber || 'N/A',
-          address: 'Hostel Campus'
+          address: 'Hostel Campus',
+          hostelName: s.hostelName || '',
+          roomType: s.roomType || '',
+          joinDate: s.joinDate || '',
+          dietPreference: s.dietPreference || ''
         }));
         setStudents(formattedStudents);
       }
@@ -58,12 +69,58 @@ const AdminStudentsData = () => {
     }
   };
 
+  const handleSelectStudent = (student) => {
+    setSelectedStudent(student);
+    setHostelForm({
+      hostelName: student.hostelName || '',
+      room: student.room || '',
+      roomType: student.roomType || '',
+      joinDate: student.joinDate || '',
+      dietPreference: student.dietPreference || ''
+    });
+    setEditingHostel(false);
+  };
+
+  const handleSaveHostel = async () => {
+    if (!selectedStudent) return;
+    setSavingHostel(true);
+    try {
+      const res = await fetch(`${API_URL}/api/profile`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firebaseUid: selectedStudent.id,
+          hostelName: hostelForm.hostelName,
+          room: hostelForm.room,
+          roomType: hostelForm.roomType,
+          joinDate: hostelForm.joinDate,
+          dietPreference: hostelForm.dietPreference
+        })
+      });
+      if (res.ok) {
+        // Update local state so the UI reflects immediately
+        const updatedStudent = { ...selectedStudent, ...hostelForm };
+        setSelectedStudent(updatedStudent);
+        setStudents(prev => prev.map(s => s.id === selectedStudent.id ? updatedStudent : s));
+        setEditingHostel(false);
+        alert('Hostel details updated successfully!');
+      } else {
+        alert('Failed to update hostel details.');
+      }
+    } catch (err) {
+      console.error('Failed to save hostel details:', err);
+      alert('Error saving hostel details.');
+    } finally {
+      setSavingHostel(false);
+    }
+  };
+
   if (selectedStudent) {
     return (
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden min-h-[500px]">
         <div className="p-6 border-b border-gray-100 flex items-center gap-4 bg-gray-50/50">
           <button 
-            onClick={() => setSelectedStudent(null)}
+            onClick={() => { setSelectedStudent(null); setEditingHostel(false); }}
             className="p-2 bg-white border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
           >
             <ArrowLeft size={18} />
@@ -140,6 +197,106 @@ const AdminStudentsData = () => {
                     </div>
                  </div>
                </div>
+
+               {/* Hostel Details - Admin Editable */}
+               <div className="pt-6 border-t border-gray-100 mt-2">
+                 <div className="flex items-center justify-between mb-4">
+                   <h4 className="text-sm font-black text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                     <Home size={16} /> Hostel Details
+                   </h4>
+                   {!editingHostel ? (
+                     <button
+                       onClick={() => setEditingHostel(true)}
+                       className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 rounded-lg hover:bg-indigo-100 transition-colors"
+                     >
+                       <Edit2 size={12} /> Edit
+                     </button>
+                   ) : (
+                     <div className="flex gap-2">
+                       <button
+                         onClick={handleSaveHostel}
+                         disabled={savingHostel}
+                         className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                       >
+                         <Save size={12} /> {savingHostel ? 'Saving...' : 'Save'}
+                       </button>
+                       <button
+                         onClick={() => { setEditingHostel(false); setHostelForm({ hostelName: selectedStudent.hostelName || '', room: selectedStudent.room || '', roomType: selectedStudent.roomType || '', joinDate: selectedStudent.joinDate || '', dietPreference: selectedStudent.dietPreference || '' }); }}
+                         className="px-3 py-1.5 text-xs font-bold text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                       >
+                         Cancel
+                       </button>
+                     </div>
+                   )}
+                 </div>
+                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                   <div>
+                     <label className="block text-[11px] text-gray-500 font-bold uppercase tracking-wide mb-1">Hostel Block</label>
+                     <input
+                       type="text"
+                       disabled={!editingHostel}
+                       value={hostelForm.hostelName}
+                       onChange={(e) => setHostelForm({ ...hostelForm, hostelName: e.target.value })}
+                       placeholder="e.g. Boys Hostel A"
+                       className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:bg-white disabled:opacity-70 disabled:cursor-not-allowed transition-all"
+                     />
+                   </div>
+                   <div>
+                     <label className="block text-[11px] text-gray-500 font-bold uppercase tracking-wide mb-1">Room Number</label>
+                     <input
+                       type="text"
+                       disabled={!editingHostel}
+                       value={hostelForm.room}
+                       onChange={(e) => setHostelForm({ ...hostelForm, room: e.target.value })}
+                       placeholder="e.g. A-302"
+                       className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:bg-white disabled:opacity-70 disabled:cursor-not-allowed transition-all"
+                     />
+                   </div>
+                   <div>
+                     <label className="block text-[11px] text-gray-500 font-bold uppercase tracking-wide mb-1">Room Type</label>
+                     <select
+                       disabled={!editingHostel}
+                       value={hostelForm.roomType}
+                       onChange={(e) => setHostelForm({ ...hostelForm, roomType: e.target.value })}
+                       className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:bg-white disabled:opacity-70 disabled:cursor-not-allowed transition-all"
+                     >
+                       <option value="">Select type</option>
+                       <option value="Single Occupancy">Single Occupancy</option>
+                       <option value="Double Occupancy">Double Occupancy</option>
+                       <option value="Triple Occupancy">Triple Occupancy</option>
+                     </select>
+                   </div>
+                   <div>
+                     <label className="block text-[11px] text-gray-500 font-bold uppercase tracking-wide mb-1">Date of Joining</label>
+                     <input
+                       type="text"
+                       disabled={!editingHostel}
+                       value={hostelForm.joinDate}
+                       onChange={(e) => setHostelForm({ ...hostelForm, joinDate: e.target.value })}
+                       placeholder="e.g. Aug 10, 2023"
+                       className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:bg-white disabled:opacity-70 disabled:cursor-not-allowed transition-all"
+                     />
+                   </div>
+                   <div>
+                     <label className="block text-[11px] text-gray-500 font-bold uppercase tracking-wide mb-1">Diet Preference</label>
+                     <select
+                       disabled={!editingHostel}
+                       value={hostelForm.dietPreference}
+                       onChange={(e) => setHostelForm({ ...hostelForm, dietPreference: e.target.value })}
+                       className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:bg-white disabled:opacity-70 disabled:cursor-not-allowed transition-all"
+                     >
+                       <option value="">Select preference</option>
+                       <option value="Vegetarian">Vegetarian</option>
+                       <option value="Non-Vegetarian">Non-Vegetarian</option>
+                       <option value="Vegan">Vegan</option>
+                     </select>
+                   </div>
+                 </div>
+                 <p className="text-xs text-orange-500 flex items-center mt-4 bg-orange-50 p-2.5 rounded-lg border border-orange-100">
+                   <ShieldCheck className="w-4 h-4 mr-2 flex-shrink-0" />
+                   Changes saved here will be reflected in the student's profile instantly.
+                 </p>
+               </div>
             </div>
           </div>
         </div>
@@ -207,7 +364,7 @@ const AdminStudentsData = () => {
                 </td>
                 <td className="px-6 py-4 text-right">
                   <button 
-                    onClick={() => setSelectedStudent(student)}
+                    onClick={() => handleSelectStudent(student)}
                     className="inline-flex items-center gap-1 bg-white border border-gray-200 text-gray-700 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 px-3 py-1.5 rounded-lg font-bold text-sm transition-all shadow-sm group-hover:shadow-md"
                   >
                     View <ChevronRight size={16} />
