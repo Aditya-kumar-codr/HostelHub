@@ -8,6 +8,7 @@ import mealRoutes from './src/routes/mealRoutes.js';
 import reviewRoutes from './src/routes/reviewRoutes.js';
 import announcementRoutes from './src/routes/announcementRoutes.js';
 import complaintRoutes from './src/routes/complaintRoutes.js';
+import expenseRoutes from './src/routes/expenseRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -29,6 +30,7 @@ app.use('/api/meals', mealRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/announcements', announcementRoutes);
 app.use('/api/complaints', complaintRoutes);
+app.use('/api/expenses', expenseRoutes);
 
 // Basic route to test the server
 app.get('/', (req, res) => {

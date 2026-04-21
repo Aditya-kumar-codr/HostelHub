@@ -29,6 +29,7 @@ import { API_URL } from '../config';
 import AdminFoodAndMeals from './AdminFoodAndMeals';
 import AdminAnnouncements from './AdminAnnouncements';
 import AdminComplaints from './AdminComplaints';
+import AdminExpenses from './AdminExpenses';
 
 const AdminStudentsData = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -381,12 +382,6 @@ const AdminStudentsData = () => {
   );
 };
 
-const AdminExpenses = () => (
-  <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
-    <h2 className="text-xl font-bold text-gray-800 mb-4">Expense of Students</h2>
-    <p className="text-gray-600">Track fee deposits, pending dues, and overall student expenses.</p>
-  </div>
-);
 
 const AdminLostAndFound = () => (
   <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">

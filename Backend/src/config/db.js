@@ -115,6 +115,20 @@ export const initDB = async () => {
       ALTER TABLE "Complaint" ADD COLUMN IF NOT EXISTS "importance" VARCHAR(20) NOT NULL DEFAULT 'normal' CHECK ("importance" IN ('low', 'normal', 'important', 'urgent'));
     `);
 
+    // Create Expense Table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS "Expense" (
+        "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+        "studentName" VARCHAR(255) NOT NULL,
+        "title" VARCHAR(500) NOT NULL,
+        "amount" NUMERIC(10, 2) NOT NULL DEFAULT 0,
+        "dueDate" VARCHAR(50),
+        "isPaid" BOOLEAN NOT NULL DEFAULT false,
+        "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
     client.release();
     console.log('Database tables initialized securely!');
   } catch (error) {
