@@ -50,11 +50,11 @@ export const updateItemStatus = async (req, res) => {
 export const reportFound = async (req, res) => {
   try {
     const { id } = req.params;
-    const { foundBy } = req.body;
+    const { foundBy, foundByPhone } = req.body;
     if (!foundBy) {
       return res.status(400).json({ error: 'foundBy (student name) is required' });
     }
-    const item = await reportItemFound(id, foundBy);
+    const item = await reportItemFound(id, foundBy, foundByPhone);
     if (!item) return res.status(404).json({ error: 'Item not found' });
     res.status(200).json(item);
   } catch (error) {

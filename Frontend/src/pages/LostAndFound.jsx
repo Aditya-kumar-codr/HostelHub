@@ -9,6 +9,7 @@ const LostAndFound = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentUserName, setCurrentUserName] = useState('Student');
+  const [currentUserPhone, setCurrentUserPhone] = useState('');
   const [saving, setSaving] = useState(false);
 
   const [reportForm, setReportForm] = useState({
@@ -27,6 +28,7 @@ const LostAndFound = () => {
           if (res.ok) {
             const data = await res.json();
             setCurrentUserName(data.user?.displayName || user.displayName || 'Student');
+            setCurrentUserPhone(data.phone || '');
           } else {
             setCurrentUserName(user.displayName || 'Student');
           }
@@ -98,7 +100,7 @@ const LostAndFound = () => {
       await fetch(`${API_URL}/api/lost-found/${item.id}/report-found`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ foundBy: currentUserName }),
+        body: JSON.stringify({ foundBy: currentUserName, foundByPhone: currentUserPhone }),
       });
       // Update local state
       setItems((prev) =>
