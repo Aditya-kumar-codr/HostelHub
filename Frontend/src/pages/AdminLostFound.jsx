@@ -182,9 +182,16 @@ const AdminLostFound = () => {
 
           {/* Admin: Show who found this item — this is the key notification */}
           {item.foundBy && (
-            <div className="flex items-center gap-2 text-sm font-bold text-green-700 bg-green-50 border border-green-200 px-3 py-2 rounded-lg mt-2">
-              <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-              <span>Student <strong>{item.foundBy}</strong> found this item</span>
+            <div className="flex flex-col gap-1 text-sm font-bold text-green-700 bg-green-50 border border-green-200 px-3 py-2.5 rounded-lg mt-2">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                <span>Found by: <strong>{item.foundBy}</strong></span>
+              </div>
+              {item.foundByPhone && (
+                <div className="flex items-center gap-2 text-green-600 font-medium ml-6">
+                  <span>📞 {item.foundByPhone}</span>
+                </div>
+              )}
             </div>
           )}
         </div>

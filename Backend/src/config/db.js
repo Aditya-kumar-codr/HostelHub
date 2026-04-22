@@ -140,14 +140,18 @@ export const initDB = async () => {
         "category" VARCHAR(50) NOT NULL DEFAULT 'Other',
         "status" VARCHAR(20) NOT NULL DEFAULT 'Lost' CHECK ("status" IN ('Lost', 'Found', 'Returned')),
         "foundBy" VARCHAR(255),
+        "foundByPhone" VARCHAR(50),
         "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       );
     `);
 
-    // In case LostFound table already exists without foundBy column
+    // In case LostFound table already exists without new columns
     await client.query(`
       ALTER TABLE "LostFound" ADD COLUMN IF NOT EXISTS "foundBy" VARCHAR(255);
+    `);
+    await client.query(`
+      ALTER TABLE "LostFound" ADD COLUMN IF NOT EXISTS "foundByPhone" VARCHAR(50);
     `);
 
     client.release();

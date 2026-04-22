@@ -30,10 +30,10 @@ export const updateLostFoundStatus = async (id, status) => {
   return result.rows[0];
 };
 
-export const reportItemFound = async (id, foundBy) => {
+export const reportItemFound = async (id, foundBy, foundByPhone) => {
   const result = await pool.query(
-    `UPDATE "LostFound" SET "foundBy" = $1, "status" = 'Found', "updatedAt" = CURRENT_TIMESTAMP WHERE "id" = $2 RETURNING *`,
-    [foundBy, id]
+    `UPDATE "LostFound" SET "foundBy" = $1, "foundByPhone" = $2, "status" = 'Found', "updatedAt" = CURRENT_TIMESTAMP WHERE "id" = $3 RETURNING *`,
+    [foundBy, foundByPhone || null, id]
   );
   return result.rows[0];
 };
