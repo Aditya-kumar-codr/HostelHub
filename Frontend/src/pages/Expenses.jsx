@@ -11,30 +11,48 @@ import {
   BadgeCheck,
 } from 'lucide-react';
 import { API_URL } from '../config';
-
-// Same placeholder name used across all student pages until auth is complete
-const STUDENT_NAME = 'Aditya';
+import { auth } from '../firebase';
 
 const Expenses = () => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [studentName, setStudentName] = useState('');
 
   useEffect(() => {
-    const fetchExpenses = async () => {
-      try {
-        const res = await fetch(
-          `${API_URL}/api/expenses?studentName=${encodeURIComponent(STUDENT_NAME)}`
-        );
-        if (res.ok) {
-          setExpenses(await res.json());
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        // Get the display name from profile API (same name admin sees)
+        let name = user.displayName || 'Student';
+        try {
+          const profileRes = await fetch(`${API_URL}/api/profile/${user.uid}`);
+          if (profileRes.ok) {
+            const data = await profileRes.json();
+            name = data.user?.displayName || user.displayName || 'Student';
+          }
+        } catch (err) {
+          console.error('Failed to fetch profile:', err);
         }
-      } catch (err) {
-        console.error('Failed to fetch expenses:', err);
-      } finally {
+        setStudentName(name);
+
+        // Now fetch expenses using the correct name
+        try {
+          const res = await fetch(
+            `${API_URL}/api/expenses?studentName=${encodeURIComponent(name)}`
+          );
+          if (res.ok) {
+            setExpenses(await res.json());
+          }
+        } catch (err) {
+          console.error('Failed to fetch expenses:', err);
+        } finally {
+          setLoading(false);
+        }
+      } else {
         setLoading(false);
       }
-    };
-    fetchExpenses();
+    });
+
+    return () => unsubscribe();
   }, []);
 
   /* ── Derived values ──────────────────────────────── */

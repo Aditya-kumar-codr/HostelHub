@@ -30,6 +30,7 @@ import AdminFoodAndMeals from './AdminFoodAndMeals';
 import AdminAnnouncements from './AdminAnnouncements';
 import AdminComplaints from './AdminComplaints';
 import AdminExpenses from './AdminExpenses';
+import AdminLostFound from './AdminLostFound';
 
 const AdminStudentsData = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -383,12 +384,7 @@ const AdminStudentsData = () => {
 };
 
 
-const AdminLostAndFound = () => (
-  <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
-    <h2 className="text-xl font-bold text-gray-800 mb-4">Lost and Found</h2>
-    <p className="text-gray-600">Manage reported lost items and update found item statuses.</p>
-  </div>
-);
+
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -400,7 +396,7 @@ const AdminDashboard = () => {
       case 'announcements': return <AdminAnnouncements />;
       case 'complaints': return <AdminComplaints />;
       case 'expenses': return <AdminExpenses />;
-      case 'lost-found': return <AdminLostAndFound />;
+      case 'lost-found': return <AdminLostFound />;
       default: return <AdminStudentsData />;
     }
   };
