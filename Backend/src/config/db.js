@@ -129,6 +129,27 @@ export const initDB = async () => {
       );
     `);
 
+    // Create LostFound Table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS "LostFound" (
+        "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+        "itemName" VARCHAR(500) NOT NULL,
+        "description" TEXT NOT NULL,
+        "reportedBy" VARCHAR(255) NOT NULL,
+        "location" VARCHAR(255),
+        "category" VARCHAR(50) NOT NULL DEFAULT 'Other',
+        "status" VARCHAR(20) NOT NULL DEFAULT 'Lost' CHECK ("status" IN ('Lost', 'Found', 'Returned')),
+        "foundBy" VARCHAR(255),
+        "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    // In case LostFound table already exists without foundBy column
+    await client.query(`
+      ALTER TABLE "LostFound" ADD COLUMN IF NOT EXISTS "foundBy" VARCHAR(255);
+    `);
+
     client.release();
     console.log('Database tables initialized securely!');
   } catch (error) {
