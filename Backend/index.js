@@ -10,6 +10,7 @@ import announcementRoutes from './src/routes/announcementRoutes.js';
 import complaintRoutes from './src/routes/complaintRoutes.js';
 import expenseRoutes from './src/routes/expenseRoutes.js';
 import lostFoundRoutes from './src/routes/lostFoundRoutes.js';
+import laundryRoutes from './src/routes/laundryRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -33,6 +34,7 @@ app.use('/api/announcements', announcementRoutes);
 app.use('/api/complaints', complaintRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/lost-found', lostFoundRoutes);
+app.use('/api/laundry', laundryRoutes);
 
 // Basic route to test the server
 app.get('/', (req, res) => {
