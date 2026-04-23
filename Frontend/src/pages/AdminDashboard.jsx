@@ -33,6 +33,7 @@ import AdminComplaints from './AdminComplaints';
 import AdminExpenses from './AdminExpenses';
 import AdminLostFound from './AdminLostFound';
 import AdminLaundry from './AdminLaundry';
+import AdminProfile from './AdminProfile';
 
 const AdminStudentsData = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -400,6 +401,7 @@ const AdminDashboard = () => {
       case 'expenses': return <AdminExpenses />;
       case 'lost-found': return <AdminLostFound />;
       case 'laundry': return <AdminLaundry />;
+      case 'profile': return <AdminProfile />;
       default: return <AdminStudentsData />;
     }
   };
@@ -459,7 +461,7 @@ const AdminDashboard = () => {
             <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
           </button>
           
-          <div className="flex items-center gap-3 pl-0 sm:pl-4 sm:border-l border-gray-200 cursor-pointer group">
+          <div onClick={() => setActiveTab('profile')} className="flex items-center gap-3 pl-0 sm:pl-4 sm:border-l border-gray-200 cursor-pointer group">
             <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold shadow-sm group-hover:scale-105 transition-transform">
               A
             </div>

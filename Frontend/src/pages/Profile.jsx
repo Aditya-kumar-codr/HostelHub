@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Camera, Edit2, Save, MapPin, Shield, Phone, User, Key, Utensils, BookOpen } from 'lucide-react';
+import { Camera, Edit2, Save, MapPin, Shield, Phone, User, Key, Utensils, BookOpen, LogOut } from 'lucide-react';
 import { auth } from '../firebase';
 import { API_URL } from '../config';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState('personal');
+  const navigate = useNavigate();
 
   const [profileData, setProfileData] = useState({
     name: 'Name',
@@ -113,10 +115,18 @@ const Profile = () => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+      navigate('/');
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+  };
+
   const tabs = [
     { id: 'personal', label: 'Personal details', icon: User },
-    { id: 'hostel', label: 'Hostel & Food', icon: MapPin },
-    { id: 'security', label: 'Security', icon: Key }
+    { id: 'hostel', label: 'Hostel & Food', icon: MapPin }
   ];
 
   const renderContent = () => {
@@ -192,6 +202,21 @@ const Profile = () => {
                 </div>
               </div>
             </div>
+
+            {/* Logout */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+              <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-4 pb-2 border-b border-gray-50">
+                <Shield className="w-5 h-5 mr-2 text-red-500" /> Account
+              </h3>
+              <p className="text-sm text-gray-500 mb-4">Sign out of your account on this device.</p>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 bg-red-50 text-red-600 font-bold text-sm px-5 py-2.5 rounded-xl border border-red-200 hover:bg-red-100 transition-colors"
+              >
+                <LogOut size={16} />
+                Sign Out
+              </button>
+            </div>
           </div>
         );
       case 'hostel':
@@ -242,33 +267,7 @@ const Profile = () => {
             </div>
           </div>
         );
-      case 'security':
-        return (
-          <div className="space-y-6">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-6 pb-2 border-b border-gray-50">
-                <Key className="w-5 h-5 mr-2 text-indigo-500" /> Change Password
-              </h3>
-              <form className="max-w-md space-y-5" onSubmit={(e) => { e.preventDefault(); alert("Password updated successfully!"); }}>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-                  <input type="password" required className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-                  <input type="password" required className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
-                  <input type="password" required className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all" />
-                </div>
-                <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm mt-2">
-                  Update Password
-                </button>
-              </form>
-            </div>
-          </div>
-        );
+
       default:
         return null;
     }
