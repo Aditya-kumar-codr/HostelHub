@@ -25,6 +25,7 @@ const AdminProfile = () => {
 
   const handleLogout = async () => {
     try {
+      localStorage.removeItem('adminAuth');
       await auth.signOut();
       navigate('/');
     } catch (err) {
