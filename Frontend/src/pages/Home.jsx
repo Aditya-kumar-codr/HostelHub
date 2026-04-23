@@ -46,7 +46,7 @@ const Home = () => {
 
                     {/* login */}
                     <div className="flex items-center gap-4">
-                        <Link to="/admin-dashboard" className="hidden sm:block text-gray-400 text-sm font-semibold hover:text-indigo-600 transition-colors pr-3 border-r border-gray-200">
+                        <Link to="/admin-login" className="hidden sm:block text-gray-400 text-sm font-semibold hover:text-indigo-600 transition-colors pr-3 border-r border-gray-200">
                             Admin Login
                         </Link>
                         <Link to="/login" className="hidden sm:flex items-center gap-2 text-gray-600 font-semibold hover:text-indigo-600 transition-colors px-2">
