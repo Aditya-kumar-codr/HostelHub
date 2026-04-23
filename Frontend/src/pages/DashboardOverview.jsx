@@ -4,10 +4,93 @@ import { API_URL } from '../config';
 
 const DashboardOverview = ({ profileData, setActiveTab }) => {
   const [recentAnnouncements, setRecentAnnouncements] = useState([]);
+  const [recentActivities, setRecentActivities] = useState([]);
+  const [stats, setStats] = useState({
+    openComplaints: 0,
+    laundryUsed: 0,
+    currentDue: 0
+  });
 
   useEffect(() => {
     fetchAnnouncements();
   }, []);
+
+  useEffect(() => {
+    if (profileData?.name && profileData.name !== 'Student') {
+      fetchDashboardStats();
+    }
+  }, [profileData]);
+
+  const fetchDashboardStats = async () => {
+    try {
+      const studentQuery = `?studentName=${encodeURIComponent(profileData.name)}`;
+      
+      const [complaintsRes, laundryRes, expensesRes] = await Promise.all([
+        fetch(`${API_URL}/api/complaints${studentQuery}`),
+        fetch(`${API_URL}/api/laundry${studentQuery}`),
+        fetch(`${API_URL}/api/expenses${studentQuery}`)
+      ]);
+
+      const activities = [];
+      let openComplaints = 0;
+      if (complaintsRes.ok) {
+        const complaints = await complaintsRes.json();
+        openComplaints = complaints.filter(c => c.status !== 'Resolved').length;
+        
+        complaints.forEach(c => {
+          activities.push({
+            id: `comp-${c.id}`,
+            title: `Complaint: ${c.title}`,
+            date: new Date(c.createdAt),
+            icon: AlertCircle,
+            bg: 'bg-red-50',
+            color: 'text-red-600'
+          });
+        });
+      }
+
+      let laundryUsed = 0;
+      if (laundryRes.ok) {
+        const laundry = await laundryRes.json();
+        laundryUsed = laundry.length;
+        
+        laundry.forEach(l => {
+          activities.push({
+            id: `laun-${l.id}`,
+            title: `Laundry ${l.status}`,
+            date: new Date(l.createdAt),
+            icon: Shirt,
+            bg: 'bg-blue-50',
+            color: 'text-blue-600'
+          });
+        });
+      }
+
+      let currentDue = 0;
+      if (expensesRes.ok) {
+        const expenses = await expensesRes.json();
+        currentDue = expenses.filter(e => !e.isPaid).reduce((sum, e) => sum + Number(e.amount), 0);
+        
+        expenses.forEach(e => {
+          activities.push({
+            id: `exp-${e.id}`,
+            title: `Expense Added: ${e.title} (₹${e.amount})`,
+            date: new Date(e.createdAt),
+            icon: CreditCard,
+            bg: 'bg-green-50',
+            color: 'text-green-600'
+          });
+        });
+      }
+
+      setStats({ openComplaints, laundryUsed, currentDue });
+      
+      activities.sort((a, b) => b.date - a.date);
+      setRecentActivities(activities.slice(0, 4));
+    } catch (err) {
+      console.error('Failed to fetch dashboard stats:', err);
+    }
+  };
 
   const fetchAnnouncements = async () => {
     try {
@@ -46,7 +129,9 @@ const DashboardOverview = ({ profileData, setActiveTab }) => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-500">Room Status</p>
-              <p className="text-xl font-bold text-gray-900 mt-1">Room 514, Block B</p>
+              <p className="text-xl font-bold text-gray-900 mt-1">
+                {profileData?.room ? `Room ${profileData.room}, ${profileData.hostelName || 'Hostel'}` : 'Not Assigned'}
+              </p>
             </div>
             <div className="p-3 bg-blue-50 text-blue-600 rounded-lg">
               <Home className="w-6 h-6" />
@@ -57,7 +142,7 @@ const DashboardOverview = ({ profileData, setActiveTab }) => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-500">Open Complaints</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">0</p>
+              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.openComplaints}</p>
             </div>
             <div className="p-3 bg-red-50 text-red-600 rounded-lg">
               <AlertCircle className="w-6 h-6" />
@@ -68,7 +153,7 @@ const DashboardOverview = ({ profileData, setActiveTab }) => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-500">Laundry used</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">5 Times</p>
+              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.laundryUsed} Times</p>
             </div>
             <div className="p-3 bg-purple-50 text-purple-600 rounded-lg">
               <Shirt className="w-6 h-6" />
@@ -79,7 +164,7 @@ const DashboardOverview = ({ profileData, setActiveTab }) => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-500">Your Current due</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">50000</p>
+              <p className="text-2xl font-bold text-gray-900 mt-1">₹{stats.currentDue}</p>
             </div>
             <div className="p-3 bg-green-50 text-green-600 rounded-lg">
               <CreditCard className="w-6 h-6" />
@@ -92,20 +177,24 @@ const DashboardOverview = ({ profileData, setActiveTab }) => {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <h3 className="text-lg font-bold text-gray-800 mb-4">Recent Activity</h3>
           <div className="space-y-4">
-            <div className="flex items-start space-x-4 pb-4 border-b border-gray-50">
-              <div className="p-2 bg-yellow-50 text-yellow-600 rounded-lg"><Utensils className="w-5 h-5" /></div>
-              <div>
-                <p className="text-sm font-medium text-gray-900">Rated Dinner</p>
-                <p className="text-xs text-gray-500">Today at 8:30 PM</p>
-              </div>
-            </div>
-            <div className="flex items-start space-x-4 pb-4 border-b border-gray-50">
-              <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><Shirt className="w-5 h-5" /></div>
-              <div>
-                <p className="text-sm font-medium text-gray-900">Laundry load completed</p>
-                <p className="text-xs text-gray-500">Yesterday at 2:15 PM</p>
-              </div>
-            </div>
+            {recentActivities.length === 0 ? (
+              <p className="text-sm text-gray-500 text-center py-4">No recent activity.</p>
+            ) : (
+              recentActivities.map((activity) => {
+                const Icon = activity.icon;
+                return (
+                  <div key={activity.id} className="flex items-start space-x-4 pb-4 border-b border-gray-50 last:border-0">
+                    <div className={`p-2 rounded-lg ${activity.bg} ${activity.color}`}>
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">{activity.title}</p>
+                      <p className="text-xs text-gray-500">{formatDate(activity.date)}</p>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
 
