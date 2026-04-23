@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   LayoutDashboard,
   AlertCircle,
@@ -21,19 +21,38 @@ import FoodReviews from './FoodReviews';
 import LostAndFound from './LostAndFound';
 import Profile from './Profile';
 import Expenses from './Expenses';
+import { auth } from '../firebase';
+import { API_URL } from '../config';
 
 const StudentDashboard = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [profileData, setProfileData] = useState({ name: 'Student' });
 
-  const dummyProfileData = {
-    name: 'Aditya',
-  };
+  // Fetch logged-in user's name
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        try {
+          const res = await fetch(`${API_URL}/api/profile/${user.uid}`);
+          if (res.ok) {
+            const data = await res.json();
+            setProfileData({ name: data.user?.displayName || user.displayName || 'Student' });
+          } else {
+            setProfileData({ name: user.displayName || 'Student' });
+          }
+        } catch (err) {
+          setProfileData({ name: user.displayName || 'Student' });
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <DashboardOverview profileData={dummyProfileData} setActiveTab={setActiveTab} />;
+        return <DashboardOverview profileData={profileData} setActiveTab={setActiveTab} />;
       case 'announcements':
         return <Announcements />;
       case 'complaints':
