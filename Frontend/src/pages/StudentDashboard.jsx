@@ -37,7 +37,10 @@ const StudentDashboard = () => {
           const res = await fetch(`${API_URL}/api/profile/${user.uid}`);
           if (res.ok) {
             const data = await res.json();
-            setProfileData({ name: data.user?.displayName || user.displayName || 'Student' });
+            setProfileData({ 
+              ...data,
+              name: data.user?.displayName || user.displayName || 'Student' 
+            });
           } else {
             setProfileData({ name: user.displayName || 'Student' });
           }
@@ -54,19 +57,19 @@ const StudentDashboard = () => {
       case 'dashboard':
         return <DashboardOverview profileData={profileData} setActiveTab={setActiveTab} />;
       case 'announcements':
-        return <Announcements />;
+        return <Announcements profileData={profileData} />;
       case 'complaints':
-        return <Complaints />;
+        return <Complaints profileData={profileData} />;
       case 'laundry':
-        return <Laundry />;
+        return <Laundry profileData={profileData} />;
       case 'lost-found':
-        return <LostAndFound />;
+        return <LostAndFound profileData={profileData} />;
       case 'food':
-        return <FoodReviews />;
+        return <FoodReviews profileData={profileData} />;
       case 'profile':
-        return <Profile />;
+        return <Profile profileData={profileData} />;
       case 'expenses':
-        return <Expenses />;
+        return <Expenses profileData={profileData} />;
       default:
         return null;
     }

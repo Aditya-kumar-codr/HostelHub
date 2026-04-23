@@ -9,7 +9,7 @@ const importanceConfig = {
   urgent: { label: 'Urgent', icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-200', dot: 'bg-red-500', badge: 'bg-red-100 text-red-700' }
 };
 
-const Complaints = () => {
+const Complaints = ({ profileData }) => {
   const [complaints, setComplaints] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
   const [newComplaintTitle, setNewComplaintTitle] = useState('');
@@ -18,16 +18,18 @@ const Complaints = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
-  // We are heavily relying on the hardcoded dummy name since auth is incomplete
-  const studentName = 'Aditya';
+  const studentName = profileData?.name || 'Student';
 
   useEffect(() => {
-    fetchComplaints();
-  }, []);
+    if (profileData?.name) {
+      fetchComplaints(profileData.name);
+    }
+  }, [profileData]);
 
-  const fetchComplaints = async () => {
+  const fetchComplaints = async (nameToFetch) => {
     try {
-      const res = await fetch(`${API_URL}/api/complaints?studentName=${studentName}`);
+      const name = nameToFetch || studentName;
+      const res = await fetch(`${API_URL}/api/complaints?studentName=${encodeURIComponent(name)}`);
       if (res.ok) {
         const data = await res.json();
         setComplaints(data);
