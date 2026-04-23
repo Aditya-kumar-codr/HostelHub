@@ -130,9 +130,7 @@ HostelHub/
     │   │   ├── AdminFoodAndMeals.jsx # Admin food menu manager
     │   │   ├── Expenses.jsx          # Student expenses
     │   │   ├── AdminExpenses.jsx     # Admin expenses manager
-    │   │   ├── Announcements.jsx     # Student announcements
-    │   │   └── AdminAnnouncements.jsx# Admin announcements manager
-    │   ├── assets/          # Static assets (images, etc.)
+    │   │   └── Announcements.jsx     # Student announcements
     │   ├── firebase.js      # Firebase connection & auth config
     │   └── config.js        # Global configs (e.g. dynamic API_URL selection)
     ├── tailwind.config.js   # Tailwind design tokens
