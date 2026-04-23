@@ -154,6 +154,19 @@ export const initDB = async () => {
       ALTER TABLE "LostFound" ADD COLUMN IF NOT EXISTS "foundByPhone" VARCHAR(50);
     `);
 
+    // Create Laundry Table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS "Laundry" (
+        "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+        "studentName" VARCHAR(255) NOT NULL,
+        "studentRoom" VARCHAR(50),
+        "items" TEXT NOT NULL,
+        "status" VARCHAR(20) NOT NULL DEFAULT 'Received' CHECK ("status" IN ('Received', 'Washing', 'Ready', 'Collected')),
+        "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
     client.release();
     console.log('Database tables initialized securely!');
   } catch (error) {

@@ -22,6 +22,7 @@ import {
   Home,
   Edit2
 } from 'lucide-react';
+import { Shirt } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { API_URL } from '../config';
 
@@ -31,6 +32,7 @@ import AdminAnnouncements from './AdminAnnouncements';
 import AdminComplaints from './AdminComplaints';
 import AdminExpenses from './AdminExpenses';
 import AdminLostFound from './AdminLostFound';
+import AdminLaundry from './AdminLaundry';
 
 const AdminStudentsData = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -397,6 +399,7 @@ const AdminDashboard = () => {
       case 'complaints': return <AdminComplaints />;
       case 'expenses': return <AdminExpenses />;
       case 'lost-found': return <AdminLostFound />;
+      case 'laundry': return <AdminLaundry />;
       default: return <AdminStudentsData />;
     }
   };
@@ -408,6 +411,7 @@ const AdminDashboard = () => {
     { id: 'complaints', name: 'Complaints', icon: AlertCircle },
     { id: 'expenses', name: 'Expenses', icon: CreditCard },
     { id: 'lost-found', name: 'Lost & Found', icon: Search },
+    { id: 'laundry', name: 'Laundry', icon: Shirt },
   ];
 
   return (
