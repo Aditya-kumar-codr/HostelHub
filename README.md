@@ -6,21 +6,31 @@
 
 ### For Students
 * **Real-time Food Menu & Reviews:** View today's breakfast, lunch, and dinner menu directly from the administration, and provide live, rated feedback.
-* **Profile Management:** Instantly update emergency contacts and personal details.
-* **Complaints System:** Easily track and log hostel complaints for fast resolution.
-* **Dashboard Overview:** Get a quick view of pending fees, room details, and recent announcements.
+* **Profile Management:** Instantly update emergency contacts, personal details, and sign out securely.
+* **Complaints System:** Easily track and log hostel complaints with importance levels for fast resolution.
+* **Laundry Management:** Submit laundry orders, track real-time status (Received → Washing → Ready → Collected), and get notified when laundry is ready for pickup.
+* **Lost & Found:** Browse reported lost items and report found items with your contact details to help others.
+* **Expenses Tracker:** View personalized expense records assigned by administration.
+* **Announcements:** Stay updated with hostel announcements categorized by importance (Normal, Important, Urgent).
+* **Dashboard Overview:** Dynamic welcome with your name, quick view of pending fees, room details, and recent announcements.
 
 ### For Administrators
+* **Secure Admin Login:** Dedicated admin sign-in portal with credential-based authentication and route protection.
 * **Student Directory:** Beautifully organized overview of all registered students, their fee statuses, and parent contact details.
 * **Live Food & Meals Manager:** Set the daily menu for Breakfast, Lunch, and Dinner. Changes reflect instantly on the student portal.
-* **Centralized Management:** Modular dashboards to handle expenses, announcements, and lost & found items.
+* **Complaints Manager:** View, manage, and resolve student complaints with status tracking.
+* **Laundry Manager:** Receive student laundry orders and progress them through status stages. Students get notified automatically.
+* **Lost & Found Manager:** Track lost items, see who found them (with phone number), and manage item statuses (Lost → Found → Returned).
+* **Student Expenses:** Assign and manage expense records for individual students.
+* **Announcements:** Create and manage hostel-wide announcements with importance levels.
+* **Admin Profile:** Editable admin profile with personal and work information, plus secure sign out.
 
 ## 🛠 Tech Stack
 
 * **Frontend:** React.js, Vite, Tailwind CSS, Lucide React (Icons)
 * **Backend:** Node.js, Express.js
 * **Database:** PostgreSQL (Hosted on Render via `pg-pool`)
-* **Authentication:** Firebase Auth
+* **Authentication:** Firebase Auth (Students), Credential-based (Admin)
 * **Deployment:**
   * Frontend: Vercel
   * Backend: Render
@@ -100,8 +110,29 @@ HostelHub/
 │
 └── Frontend/                # Vite + React Frontend Application
     ├── src/
-    │   ├── pages/           # Detailed page views (Dashboard, Reviews, Profile, etc.)
-    │   ├── components/      # Reusable UI elements
+    │   ├── pages/           # All page views
+    │   │   ├── Home.jsx              # Landing page
+    │   │   ├── Login.jsx             # Student sign in (dark theme)
+    │   │   ├── Signup.jsx            # Student sign up (dark theme)
+    │   │   ├── AdminLogin.jsx        # Admin sign in portal
+    │   │   ├── StudentDashboard.jsx  # Student main dashboard
+    │   │   ├── AdminDashboard.jsx    # Admin main dashboard
+    │   │   ├── DashboardOverview.jsx # Student dashboard home
+    │   │   ├── Profile.jsx           # Student profile
+    │   │   ├── AdminProfile.jsx      # Admin profile
+    │   │   ├── Complaints.jsx        # Student complaints
+    │   │   ├── AdminComplaints.jsx   # Admin complaints manager
+    │   │   ├── Laundry.jsx           # Student laundry
+    │   │   ├── AdminLaundry.jsx      # Admin laundry manager
+    │   │   ├── LostAndFound.jsx      # Student lost & found
+    │   │   ├── AdminLostFound.jsx    # Admin lost & found manager
+    │   │   ├── FoodReviews.jsx       # Student food reviews
+    │   │   ├── AdminFoodAndMeals.jsx # Admin food menu manager
+    │   │   ├── Expenses.jsx          # Student expenses
+    │   │   ├── AdminExpenses.jsx     # Admin expenses manager
+    │   │   ├── Announcements.jsx     # Student announcements
+    │   │   └── AdminAnnouncements.jsx# Admin announcements manager
+    │   ├── assets/          # Static assets (images, etc.)
     │   ├── firebase.js      # Firebase connection & auth config
     │   └── config.js        # Global configs (e.g. dynamic API_URL selection)
     ├── tailwind.config.js   # Tailwind design tokens
