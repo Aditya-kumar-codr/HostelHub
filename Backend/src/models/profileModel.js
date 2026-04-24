@@ -71,3 +71,26 @@ export const upsertProfile = async (userId, profileData) => {
     return result.rows[0];
   }
 };
+
+export const deleteProfileAndUser = async (firebaseUid) => {
+  // Use a transaction to ensure both or neither are deleted
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    
+    // First delete dependent records from other tables if any? 
+    // Profile, Complaints, Expenses, etc.
+    // For now we will delete Profile and then User.
+    // NOTE: Depending on your foreign keys for other tables, you might need to delete them or use CASCADE
+    await client.query('DELETE FROM "Profile" WHERE "userId" = $1', [firebaseUid]);
+    const result = await client.query('DELETE FROM "User" WHERE "firebaseUid" = $1 RETURNING *', [firebaseUid]);
+    
+    await client.query('COMMIT');
+    return result.rows[0];
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
+};
