@@ -1,4 +1,4 @@
-import { getProfileByUserId, upsertProfile, getAllProfilesWithUsers } from '../models/profileModel.js';
+import { getProfileByUserId, upsertProfile, getAllProfilesWithUsers, deleteProfileAndUser } from '../models/profileModel.js';
 import { findUserByFirebaseUid, createUser, updateUserName } from '../models/userModel.js';
 
 export const getProfile = async (req, res) => {
@@ -51,5 +51,25 @@ export const updateProfile = async (req, res) => {
     console.error("Error updating profile:", error.message);
     console.error("Full error:", error);
     res.status(500).json({ error: 'Internal server error', details: error.message });
+  }
+};
+
+export const deleteStudent = async (req, res) => {
+  try {
+    const { firebaseUid } = req.params;
+    if (!firebaseUid) return res.status(400).json({ error: 'firebaseUid is required' });
+
+    // Ensure the student exists first
+    const user = await findUserByFirebaseUid(firebaseUid);
+    if (!user) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    // Delete from Profile and User table
+    await deleteProfileAndUser(firebaseUid);
+    res.status(200).json({ message: 'Student successfully deleted from database' });
+  } catch (error) {
+    console.error("Error deleting student:", error);
+    res.status(500).json({ error: 'Internal server error while deleting student' });
   }
 };

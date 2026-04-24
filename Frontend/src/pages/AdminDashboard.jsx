@@ -122,20 +122,59 @@ const AdminStudentsData = () => {
     }
   };
 
+  const [deletingStudent, setDeletingStudent] = useState(false);
+
+  const handleDeleteStudent = async () => {
+    if (!selectedStudent) return;
+    
+    if (!window.confirm(`Are you sure you want to completely delete ${selectedStudent.name} from the database? This action cannot be undone.`)) {
+      return;
+    }
+    
+    setDeletingStudent(true);
+    try {
+      const res = await fetch(`${API_URL}/api/profile/${selectedStudent.id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        setStudents(prev => prev.filter(s => s.id !== selectedStudent.id));
+        setSelectedStudent(null);
+        alert('Student deleted successfully from the database! Please remember to also delete them from the Firebase Auth Console if you want to revoke their login access entirely.');
+      } else {
+        alert('Failed to delete student.');
+      }
+    } catch (err) {
+      console.error('Failed to delete student:', err);
+      alert('Error deleting student.');
+    } finally {
+      setDeletingStudent(false);
+    }
+  };
+
   if (selectedStudent) {
     return (
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden min-h-[500px]">
-        <div className="p-6 border-b border-gray-100 flex items-center gap-4 bg-gray-50/50">
-          <button 
-            onClick={() => { setSelectedStudent(null); setEditingHostel(false); }}
-            className="p-2 bg-white border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
-          >
-            <ArrowLeft size={18} />
-          </button>
-          <div>
-            <h2 className="text-xl font-bold text-gray-800">Student Profile</h2>
-            <p className="text-sm text-gray-500">Detailed information</p>
+        <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => { setSelectedStudent(null); setEditingHostel(false); }}
+              className="p-2 bg-white border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
+            >
+              <ArrowLeft size={18} />
+            </button>
+            <div>
+              <h2 className="text-xl font-bold text-gray-800">Student Profile</h2>
+              <p className="text-sm text-gray-500">Detailed information</p>
+            </div>
           </div>
+          <button
+            onClick={handleDeleteStudent}
+            disabled={deletingStudent}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-red-600 border border-red-700 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 shadow-sm"
+          >
+            <XCircle size={14} />
+            {deletingStudent ? 'Deleting...' : 'Drop Student'}
+          </button>
         </div>
         <div className="p-6 md:p-8">
           <div className="flex flex-col md:flex-row gap-8">
