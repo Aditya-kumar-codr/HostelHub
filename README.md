@@ -112,8 +112,8 @@ HostelHub/
     ├── src/
     │   ├── pages/           # All page views
     │   │   ├── Home.jsx              # Landing page
-    │   │   ├── Login.jsx             # Student sign in (dark theme)
-    │   │   ├── Signup.jsx            # Student sign up (dark theme)
+    │   │   ├── Login.jsx             # Student sign in
+    │   │   ├── Signup.jsx            # Student sign up
     │   │   ├── AdminLogin.jsx        # Admin sign in portal
     │   │   ├── StudentDashboard.jsx  # Student main dashboard
     │   │   ├── AdminDashboard.jsx    # Admin main dashboard
