@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, Eye, EyeOff } from 'lucide-react';
 
-const ADMIN_EMAIL = 'admin1234@gmail.com';
-const ADMIN_PASSWORD = 'admin1234Pass';
+const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL;
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
