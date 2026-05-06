@@ -309,14 +309,9 @@ const Profile = () => {
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden text-center relative pb-6">
             <div className="h-28 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
             <div className="relative -mt-14 inline-block mb-3">
-              <img
-                src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150&h=150"
-                alt="Profile Avatar"
-                className="w-28 h-28 rounded-full border-4 border-white shadow-sm object-cover bg-white mx-auto"
-              />
-              <button className="absolute bottom-1 right-1 p-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition shadow-sm border-2 border-white">
-                <Camera className="w-4 h-4" />
-              </button>
+              <div className="w-28 h-28 rounded-full border-4 border-white shadow-sm bg-gradient-to-br from-indigo-500 to-purple-600 mx-auto flex items-center justify-center">
+                <span className="text-white text-4xl font-black">{profileData.name ? profileData.name.charAt(0).toUpperCase() : 'S'}</span>
+              </div>
             </div>
             <h2 className="text-xl font-bold text-gray-900">{profileData.name}</h2>
             <p className="text-gray-500 text-sm mt-1">{profileData.enrollment}</p>
